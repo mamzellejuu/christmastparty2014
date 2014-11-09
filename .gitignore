@@ -1,0 +1,12 @@
+node_modules/
+.svn
+.idea/
+.DS_Store
+
+logs
+*.log
+.grunt
+
+pids
+*.pid
+*.seed
