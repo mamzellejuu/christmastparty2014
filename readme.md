@@ -1,3 +1,28 @@
+Application Frontend : 
+
+Folder de travail : 
+	- HTML : /public 
+	- CSS : /less
+	- JS Angular : /app
+	- JS Statique : /js/main.js
+		- Faire la mise en place du JS autre que l'application Angular dans ce fichier ;
+	- Fonts : /public/fonts
+	- Images : /public/img
+
+Libraries javascript : 
+	- Pour ajouter une librairie javascript :
+		- mettre le fichier sources dans le folder /js/libs ;
+		- modifier le fichier gruntfile (tache contact) pour ajouter la dépendance ;
+		- faire rouler la tache grunt dev pour rajouter la dépendance dans le package.
+
+Grunt Task : 
+	- Pour travailler en statique : mettre en route la tache grunt dev ;
+		- Cf. gruntfile pour plus d'infos sur les taches
+
+Node Application : 
+	- Pour lancer l'application : NODE_ENV=development node app.js (depuis la racine du projet). L'application roule sur le port 3001;
+
+
 Parse APP Configs : {
 	"name": "nurun-noel-2014",
 	"Application-ID": "yzcJJ3ZKhLHW4qfWgbZroKcYWXXr7to8WiJxgime",

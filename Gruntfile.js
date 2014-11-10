@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             js: {
-                files: ["js/app/js/**", "js/app/*.js"],
+                files: ["js/app/js/**", "js/app/*.js", "js/main.js"],
                 tasks: ["concat:app"],
                 options: {
                     nospawn: true
@@ -25,19 +25,11 @@ module.exports = function (grunt) {
         },
         concat: {
             vendors: {
-                src: [
+                src: [ //libs - vendors JS
                     'js/libs/jquery-2.1.1.js',
                     'js/vendors/angular.js',
                     'js/vendors/angular-animate.js',
-                    //'js/vendors/angular-aria.js',
-                    //'js/vendors/angular-cookies.js',
-                    //'js/vendors/angular-loader.js',
-                    //'js/vendors/angular-messages.js',
-                    //'js/vendors/angular-mocks.js',
-                    //'js/vendors/angular-resource.js',
                     'js/vendors/angular-route.js',
-                    //'js/vendors/angular-sanitize.js',
-                    //'js/vendors/angular-scenario.js',
                     'js/vendors/angular-touch.js',
                     'js/vendors/angular-translate.js',
                     'js/vendors/angular-translate-loader-static-files.js',
@@ -48,7 +40,8 @@ module.exports = function (grunt) {
             app: {
                 src: [
                     'js/app/app.js',
-                    'js/app/**/*.js'
+                    'js/app/**/*.js',
+                    'js/main.js'
                 ],
                 dest: 'public/js/app.js'
             }
