@@ -1,11 +1,18 @@
 module.exports = function(app){
 	var modulePath = app.get('modulePath')
-	  , staticApp = require(modulePath + '/module.static.js')(app)
-	  , staticUrls = ['/', '/grid'];
+	  , StaticApplication = require(modulePath + '/module.static.js')(app)
+	  , API = require(modulePath + '/module.api.js')(app);
 
-	/* Run Static Angular App. */
-	staticApp.run(staticUrls);
+	/*-----------------------------
+	  Run Static Angular App.
+	-----------------------------*/
+	StaticApplication.run([
+		'/',
+		'/grid'
+	]);
 
-	/* API routing */
-
+	/*-------------------
+	  API routing
+	-------------------*/
+	API.run();
 };
