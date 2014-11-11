@@ -1,4 +1,4 @@
-module.exports = function(app){
+module.exports = function(app, urls, io){
     /* Run Angular application with load index.html */
     function getApplication(req, res){
         res.setHeader('Content-Type', 'text/html');
@@ -16,12 +16,15 @@ module.exports = function(app){
 		return true;
 	};
 
+	app.get('/socket', function(req, res){
+		io.sockets.emit('new media', {date: new Date().getTime(), msg: ''});
+		res.setHeader('Content-Type', 'text/html');
+        res.sendfile(app.get('staticPath') + '/index.html');
+	});
+
     /* Public interface */
-	return {
-        /* Run static Angular App with list of urls */
-		run: function(urls){
-            var urls = urls || ['/'];
-			return angular(urls);
-		}
-	}
+	return (function(urls){
+    	var urls = urls || ['/'];
+		return angular(urls);
+	})(urls);
 };

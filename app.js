@@ -53,15 +53,19 @@ app.get("*",function(req,res,next){
     next();
 });
 
+var server = http.createServer(app)
+  , io = require('socket.io').listen(server);
+
 // ================================================================================
 // ROUTING
 // ================================================================================
-require(path.join(__dirname,'/routes'))(app);
+require(path.join(__dirname,'/routes'))(app, io);
+
 
 // ================================================================================
 // Start Server
 // ================================================================================
-http.createServer(app).listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
     if(app.config.get('application:verbose')){
         console.log('Server listening on port ' + app.get('port'));
     }

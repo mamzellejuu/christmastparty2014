@@ -1,18 +1,13 @@
-module.exports = function(app){
-	var modulePath = app.get('modulePath')
-	  , StaticApplication = require(modulePath + '/module.static.js')(app)
-	  , API = require(modulePath + '/module.api.js')(app);
+module.exports = function(app, ioSocket){
+	var modulePath = app.get('modulePath');
 
 	/*-----------------------------
 	  Run Static Angular App.
 	-----------------------------*/
-	StaticApplication.run([
-		'/',
-		'/grid'
-	]);
+	require(modulePath + '/module.static.js')(app, ['/', '/grid'], ioSocket);
 
 	/*-------------------
 	  API routing
 	-------------------*/
-	API.run();
+	require(modulePath + '/module.api.js')(app, ioSocket);
 };
