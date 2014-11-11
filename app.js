@@ -47,6 +47,8 @@ app.use('/css', express.static(path.join(app.get('staticPath'), '/css')));
 app.use('/js', express.static(path.join(app.get('staticPath'), '/js')));
 app.use('/fonts', express.static(path.join(app.get('staticPath'), '/fonts')));
 app.use('/img', express.static(path.join(app.get('staticPath'), '/img')));
+app.use('/views', express.static(path.join(app.get('staticPath'), '/app/views')));
+app.use('/languages', express.static(path.join(app.get('staticPath'), '/app/languages')));
 app.use(app.router);
 app.get("*",function(req,res,next){
     res.setHeader('X-Powered-By','NodeJS');

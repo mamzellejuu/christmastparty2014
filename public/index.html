@@ -1,14 +1,16 @@
 <!DOCTYPE HTML>
-<html>
+<html id="ncp-root" ng-app="NCP.app">
 	<head>
+		<base href="/">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>Nurun Christmast Party 2014</title>
 		<link rel="stylesheet" href="/css/style.css">
 		<script src="/socket.io/socket.io.js" type="text/javascript"></script>
+		<script type="text/javascript" src="/js/vendors.js"></script>
+		<script type="text/javascript" src="/js/app.js"></script>
 	</head>
 	<body>
-		Page default...
+		<div ng-view>Page default...</div>
 	</body>
-	<script type="text/javascript" src="/js/vendors.min.js"></script>
-	<script type="text/javascript" src="/js/app.js"></script>
+	
 </html>

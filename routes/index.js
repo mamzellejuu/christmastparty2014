@@ -4,7 +4,7 @@ module.exports = function(app, ioSocket){
 	/*-----------------------------
 	  Run Static Angular App.
 	-----------------------------*/
-	require(modulePath + '/module.static.js')(app, ['/', '/grid'], ioSocket);
+	require(modulePath + '/module.static.js')(app, ['/', '/grid', '/list'], ioSocket);
 
 	/*-------------------
 	  API routing

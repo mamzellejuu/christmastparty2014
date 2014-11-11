@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             js: {
-                files: ["js/app/js/**", "js/app/*.js", "js/main.js"],
+                files: ["js/app/**/*.js", "js/app/*.js", "js/main.js"],
                 tasks: ["concat:app"],
                 options: {
                     nospawn: true
@@ -28,20 +28,28 @@ module.exports = function (grunt) {
                 src: [ //libs - vendors JS
                     'js/libs/jquery-2.1.1.js',
                     'js/vendors/angular.js',
-                    'js/vendors/angular-animate.js',
-                    'js/vendors/angular-route.js',
-                    'js/vendors/angular-touch.js',
-                    'js/vendors/angular-translate.js',
-                    'js/vendors/angular-translate-loader-static-files.js',
+                    'js/vendors/modules/angular-animate.js',
+                    'js/vendors/modules/angular-route.js',
+                    'js/vendors/modules/angular-touch.js',
+                    'js/vendors/modules/angular-sanitize.js',
+                    'js/vendors/modules/angular-translate.js',
+                    'js/vendors/modules/angular-translate-loader-static-files.js',
                     'js/vendors/modules/i18n/*.js',
                 ],
                 dest: 'public/js/vendors.js'
             },
             app: {
                 src: [
+                    'js/main.js',
+                    'js/app/providers/*.js',
+                    'js/app/services/*.js',
+                    'js/app/factories/*.js',
+                    'js/app/filters/*.js',
+                    'js/app/models/*.js',
+                    'js/app/directives/*.js',
                     'js/app/app.js',
-                    'js/app/**/*.js',
-                    'js/main.js'
+                    'js/app/controllers/*.js',
+                    'js/app/modules/*.js'
                 ],
                 dest: 'public/js/app.js'
             }
@@ -55,6 +63,22 @@ module.exports = function (grunt) {
                     'public/js/vendors.min.js': ['public/js/vendors.js']
                 }
             }
+        },
+        copy:{
+            app:{
+                expand: true,
+                cwd:'js/',
+                src: ['app/views/*',
+                      'app/views/**/*',
+                      'app/languages/*'],
+                dest: 'public/'
+            },
+            i18n: {
+                expand: true,
+                flatten:true,
+                src: ['js/vendors/modules/i18n/*'],
+                dest: 'public/app/i18n/'
+            }
         }
     });
 
@@ -63,9 +87,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-less");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
 
      /* Build */
-    grunt.registerTask("dev-build", ["less:development","concat","uglify"]);
+    grunt.registerTask("dev-build", ["less:development","concat","copy:app","uglify"]);
     grunt.registerTask("dev-watch", ["watch"]);
     grunt.registerTask("dev", [ "dev-build", "dev-watch"]);
     grunt.registerTask("heroku:production", [ "dev-build"]);
