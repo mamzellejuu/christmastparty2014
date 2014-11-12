@@ -17,7 +17,7 @@ module.exports = function(app, urls, io){
 	};
 
 	app.get('/socket', function(req, res){
-		io.sockets.emit('new media', {date: new Date().getTime(), msg: ''});
+		io.sockets.emit('new media', {date: new Date().getTime(), msg: '', url: new Date().getTime() + '.jpg'});
 		res.setHeader('Content-Type', 'text/html');
         res.sendfile(app.get('staticPath') + '/index.html');
 	});

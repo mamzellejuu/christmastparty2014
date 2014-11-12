@@ -1,1 +1,5 @@
-Grid des images...
+<div class="grid-wrapper" ncp-medias-grid="grid-frames-ready">
+	<div ng-repeat="item in items" data-url="initial-image-{{ $index }}.jpg" class="item" id="grid-frame-{{ $index }}" ncp-repeat-last="grid-frames-ready">
+		item {{ $index }}
+	</div>
+</div>

@@ -11,4 +11,10 @@ $('document').ready(function(){
 			console.log(data);
 		});
 	}
+	
+	try {
+		var g = Grid.configure({}).run();
+	} catch(e){
+		console.log(e);
+	}
 });

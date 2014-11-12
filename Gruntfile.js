@@ -2,8 +2,16 @@ module.exports = function (grunt) {
     grunt.initConfig({
         watch: {
             js: {
-                files: ["js/app/**/*.js", "js/app/*.js", "js/main.js"],
-                tasks: ["concat:app"],
+                files: [
+                	"js/app/**/*.js",
+                	"js/app/views/*.html",
+                	"js/app/views/partials/*.html",
+                	"js/app/*.js",
+                	"js/main.js",
+                	"js/libs/grid.js",
+                	"js/libs/dispatcher.js"
+                ],
+                tasks: ["concat:vendors", "concat:app", "copy:app"],
                 options: {
                     nospawn: true
                 }
@@ -27,6 +35,8 @@ module.exports = function (grunt) {
             vendors: {
                 src: [ //libs - vendors JS
                     'js/libs/jquery-2.1.1.js',
+                    'js/libs/grid.js',
+                    'js/libs/dispatcher.js',
                     'js/vendors/angular.js',
                     'js/vendors/modules/angular-animate.js',
                     'js/vendors/modules/angular-route.js',
@@ -42,12 +52,12 @@ module.exports = function (grunt) {
                 src: [
                     'js/main.js',
                     'js/app/providers/*.js',
+                    'js/app/app.js',
                     'js/app/services/*.js',
                     'js/app/factories/*.js',
                     'js/app/filters/*.js',
                     'js/app/models/*.js',
                     'js/app/directives/*.js',
-                    'js/app/app.js',
                     'js/app/controllers/*.js',
                     'js/app/modules/*.js'
                 ],

@@ -9189,6 +9189,263 @@ return jQuery;
 
 }));
 
+"use strict";
+
+/**
+ *
+*/
+var Grid = (function($){
+	if(typeof Array.prototype.shuffle !== 'function'){
+		Array.prototype.shuffle = function(){
+			var i = this.length, j, temp;
+			/* Not randomize loop for empty array */
+  			if (i == 0) return this;
+  			/* Randomize loop */
+  			while (--i){
+     			j = Math.floor( Math.random() * (i + 1));
+     			temp = this[i];
+     			this[i] = this[j];
+     			this[j] = temp;
+  			}
+  			return this;
+		};
+	}
+	
+	/**
+	 * Default settings to run Grid library
+	*/
+	var _settings = {
+		selector: '.item',
+		random: true
+	};
+
+	/**
+	 * @description
+	*/
+	var _GridApplication = function(){
+		this.settings = $.extend({}, _settings);
+		this.order = [];
+		this.frames = [];
+		this.data = [];
+		this.pointer = 0;
+		return this.init();
+	};
+	
+	$.extend(_GridApplication.prototype, {
+		/**
+		 * Initialize the grid instance
+		 * Select frames and build the order of the update sequence
+		 * @return {object} Instance of application grid class 
+		*/
+		init: function(){
+			var selector = this.settings.selector
+			  , frames = $(selector);
+			  
+			/* Check if items are catch by selector */
+			if(frames.length){
+				/* Build application components */
+				this.frames = frames;
+			}
+			
+			return this.setData().setOrder();
+		},
+	
+		/**
+		 * Update grid frame in sequence order
+		 * The pointer value select the grid frame 
+		 * @param {string} url image url to add in the grid 
+		 * @param {boolean} transition if true the frame's transition is animated
+		 * @return {object} Instance of application grid class
+		*/
+		framelize: function(data, transition){
+			var l = this.length() - 1
+			  , pointer = (this.pointer == l)? 0 : this.pointer + 1
+			  , $frame = $(this.frames[this.order[pointer]]) || null;
+			
+			if($frame.length){
+				var replace = $frame.data('url')
+				  , index = this.data.indexOf(replace);
+				
+				if(index !== -1){
+					/* Remove first frame data from data */
+					this.data.splice(index, 1);
+					/* Push new frame data in data */
+					this.data.push(data);
+					/* Change pointer */
+					this.pointer = pointer;
+					$frame.html(data).css({background: 'red'}).data('url', data);
+					window.setTimeout(function(){
+						$frame.css({background: 'none'});
+					}, 3000);
+				}
+			}
+			
+			return this;
+		},
+		
+		/**
+		 * Build the order list for update sequence
+		 * If random setting is true the order is randomized
+		 * @return {object} Instance of application grid class
+		*/
+		setOrder: function(){
+			var randomize = this.settings.random
+			  , length = this.length()
+			  , order = [];
+			
+			/* Push order by default in order choose array */
+			for(var i = 0; i < length; i++){
+				this.order.push(i);
+			};
+			
+			/* Randomize order choose array */
+			if(randomize){
+				this.order = this.order.shuffle();
+			}
+			
+			return this;
+		},
+		
+		/**
+		 * Return grid length
+		 * @return {integer} grid length
+		*/
+		length: function(){
+			return this.frames.length;
+		},
+		
+		getData: function(){
+			var r = [];
+			for(var i = 0, l = this.data.length; i < l; i++){
+				r.push(this.data[i]);
+			}
+			
+			return r;
+		},
+		
+		setData: function(){
+			for(var i = 0, l = this.frames.length; i < l; i++){
+				var data = $(this.frames[i]).attr('data-url');
+				this.data.push(data);
+			}
+			
+			return this;
+		}
+	});
+	
+	/**
+	 * Grid Application public interface
+	*/
+	var _Grid = {
+		configure: function(settings){
+			for(var p in settings){
+				if(_settings.hasOwnProperty(p)){
+					_settings[p] = settings[p];
+				}
+			}
+			
+			return _Grid;
+		},
+		
+		run: function(settings){
+			if(settings){
+				_Grid.configure(settings);
+			}
+			
+			return new _GridApplication();
+		}
+	};
+	
+	return _Grid;
+})(jQuery);
+/**
+ * Object dispatcher to pick element in dynamic list
+ * @param {array} picked array of element already used
+ * @param {array} bucket array of element to used
+*/
+var Dispatcher = function(picked, bucket, opts){
+	if(!$.isArray(picked) || !$.isArray(bucket)){
+		throw new Error('Arguments of new Dispatcher must be Array !');
+	}
+	
+	this.options = $.extend({}, {
+		delay: 10*1000
+	}, opts);
+		
+	/* Dynamic list */
+	this.bucket = bucket || [];
+	/* Elements already used */
+	this.picked = picked || [];
+	/* Element to ignore */
+	this.excluded = this.picked.slice(0);
+	/* Timeout to make pick request */
+	this.timeout = null;
+	
+	return this.init();
+};
+	
+$.extend(Dispatcher.prototype, {
+	init: function(){
+		return this.run();
+	},
+		
+	run: function(){
+	 if(this.timeout){
+			window.clearTimeout();
+			this.timeout = null;
+		}
+			
+		var that = this
+		  , delay = this.options.delay;
+			  
+		/* Delay pick action */
+		this.timeout = window.setTimeout(function(){
+			var element = that.pick();
+			if(element){
+				$(that).trigger('Dispatcher::picked', [element]);
+			}
+				
+			/* Call method run recursively */
+			that.run();
+		}, delay);
+		
+		return this;
+	},
+		
+	pick: function(){
+		var bucket = (this.bucket.length)? this.bucket : this.picked
+		  , elt = null;
+			
+		/* Get element ont excluded */
+		for(var i = 0, l = bucket.length; i < l; i++){
+			var c = bucket[i];
+			if(this.excluded.indexOf(c) == -1){
+				elt = c;
+				/* Remove element in the bucket */
+				bucket.splice(i, 1);
+				break;
+			}
+		}
+			  
+		if(elt){
+			/* Add element at the end of the picked elements array */
+			this.picked.push(elt);
+		}
+			
+		return elt;
+	},
+		
+	push: function(elt){
+		/* Add element at the end of the bucket elements array */
+		this.bucket.push(elt);
+		return this;
+	},
+		
+	setExcluded: function(elements){
+		this.excluded = elements;
+		return this;
+	}
+});
 /**
  * @license AngularJS v1.3.2
  * (c) 2010-2014 Google, Inc. http://angularjs.org

@@ -35,6 +35,7 @@ var Grid = (function($){
 		this.settings = $.extend({}, _settings);
 		this.order = [];
 		this.frames = [];
+		this.data = [];
 		this.pointer = 0;
 		return this.init();
 	};
@@ -48,18 +49,16 @@ var Grid = (function($){
 		init: function(){
 			var selector = this.settings.selector
 			  , frames = $(selector);
-			
+			  
 			/* Check if items are catch by selector */
-			if(!frames.length){
-				throw new Error('Grid Application need items ! Selector ' + selector + ' does\'nt match any DOM elements.');
-			} else {
+			if(frames.length){
 				/* Build application components */
 				this.frames = frames;
 			}
 			
-			return this.order();
+			return this.setData().setOrder();
 		},
-		
+	
 		/**
 		 * Update grid frame in sequence order
 		 * The pointer value select the grid frame 
@@ -67,13 +66,27 @@ var Grid = (function($){
 		 * @param {boolean} transition if true the frame's transition is animated
 		 * @return {object} Instance of application grid class
 		*/
-		framelize: function(url, transition){
+		framelize: function(data, transition){
 			var l = this.length() - 1
 			  , pointer = (this.pointer == l)? 0 : this.pointer + 1
-			  , frame = this.frames[pointer] || null;
+			  , $frame = $(this.frames[this.order[pointer]]) || null;
 			
-			if(frame){
+			if($frame.length){
+				var replace = $frame.data('url')
+				  , index = this.data.indexOf(replace);
 				
+				if(index !== -1){
+					/* Remove first frame data from data */
+					this.data.splice(index, 1);
+					/* Push new frame data in data */
+					this.data.push(data);
+					/* Change pointer */
+					this.pointer = pointer;
+					$frame.html(data).css({background: 'red'}).data('url', data);
+					window.setTimeout(function(){
+						$frame.css({background: 'none'});
+					}, 3000);
+				}
 			}
 			
 			return this;
@@ -84,7 +97,7 @@ var Grid = (function($){
 		 * If random setting is true the order is randomized
 		 * @return {object} Instance of application grid class
 		*/
-		order: function(){
+		setOrder: function(){
 			var randomize = this.settings.random
 			  , length = this.length()
 			  , order = [];
@@ -96,7 +109,7 @@ var Grid = (function($){
 			
 			/* Randomize order choose array */
 			if(randomize){
-				this.order.shuffle();
+				this.order = this.order.shuffle();
 			}
 			
 			return this;
@@ -108,6 +121,24 @@ var Grid = (function($){
 		*/
 		length: function(){
 			return this.frames.length;
+		},
+		
+		getData: function(){
+			var r = [];
+			for(var i = 0, l = this.data.length; i < l; i++){
+				r.push(this.data[i]);
+			}
+			
+			return r;
+		},
+		
+		setData: function(){
+			for(var i = 0, l = this.frames.length; i < l; i++){
+				var data = $(this.frames[i]).attr('data-url');
+				this.data.push(data);
+			}
+			
+			return this;
 		}
 	});
 	
@@ -116,8 +147,8 @@ var Grid = (function($){
 	*/
 	var _Grid = {
 		configure: function(settings){
-			for(var p in _settings){
-				if(settings.hasOwnPropterty(p)){
+			for(var p in settings){
+				if(_settings.hasOwnProperty(p)){
 					_settings[p] = settings[p];
 				}
 			}

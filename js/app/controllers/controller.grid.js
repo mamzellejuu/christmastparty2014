@@ -11,7 +11,11 @@
 	 * @desc Ctrl
 	*/
 	ctrl.push(function($scope, $log) {
-		$log.info('GridCtrl');
+		var items = [];
+		for(i = 0, l = 15; i < l; i++)
+			items.push(i);
+			
+		$scope.items = items;
 	});
 
 	/**
