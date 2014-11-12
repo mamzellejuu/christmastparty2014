@@ -9192,7 +9192,7 @@ return jQuery;
 "use strict";
 
 /**
- *
+ * Grid object to display and change images
 */
 var Grid = (function($){
 	if(typeof Array.prototype.shuffle !== 'function'){
@@ -9314,6 +9314,10 @@ var Grid = (function($){
 			return this.frames.length;
 		},
 		
+		/**
+		 * Return data property (list of elements used in the grid)
+		 * @return {array} list of elements used in the grid
+		*/
 		getData: function(){
 			var r = [];
 			for(var i = 0, l = this.data.length; i < l; i++){
@@ -9323,6 +9327,10 @@ var Grid = (function($){
 			return r;
 		},
 		
+		/**
+		 * Set data property (list of elements used in the grid)
+		 * @return {object} Instance of application grid class
+		*/
 		setData: function(){
 			for(var i = 0, l = this.frames.length; i < l; i++){
 				var data = $(this.frames[i]).attr('data-url');
@@ -9337,6 +9345,7 @@ var Grid = (function($){
 	 * Grid Application public interface
 	*/
 	var _Grid = {
+		/* Set configs in application */
 		configure: function(settings){
 			for(var p in settings){
 				if(_settings.hasOwnProperty(p)){
@@ -9347,6 +9356,7 @@ var Grid = (function($){
 			return _Grid;
 		},
 		
+		/* Run the application */
 		run: function(settings){
 			if(settings){
 				_Grid.configure(settings);
@@ -9358,6 +9368,8 @@ var Grid = (function($){
 	
 	return _Grid;
 })(jQuery);
+"use strict";
+
 /**
  * Object dispatcher to pick element in dynamic list
  * @param {array} picked array of element already used

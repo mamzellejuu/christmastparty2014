@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Object dispatcher to pick element in dynamic list
  * @param {array} picked array of element already used
