@@ -120,6 +120,7 @@ module.exports = function(app){
 							/* Set file field with media uploaded */
 							params.file = {
 							    name: body.name,
+							    url: body.url,
 							    __type: 'File'
 							};
 							

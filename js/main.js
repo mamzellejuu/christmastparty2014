@@ -4,7 +4,7 @@ $('document').ready(function(){
 	if(path == '/'){
 		var socket = io();
 		socket.on('new media', function(data){
-			console.log(data);
+			console.log('Socket - main.js : ' + JSON.stringify(data));
 		});
 
 		socket.on('delete media', function(data){

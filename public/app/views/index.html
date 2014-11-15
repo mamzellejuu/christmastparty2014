@@ -1,16 +1,16 @@
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
-<div class="item"></div>
+<ncp-file-upload>
+	<div class="step-1">
+		<form name="fileUploader" id="fileUploader">
+			<label>Téléchargez une image :</label>
+			<input type="file" id="fileUpload" name="fileUpload" accept="image/png;image/jpeg;image/jpg;" />
+		</form>
+	</div>
+	<div class="step-2">
+		<canvas id="imageCanvas" width="300" height="300"></canvas>
+		<p><a href="#" ng-click="upload()">Télécharger</a> | <a href="#" ng-click="reset()">Annuler</a></p>
+	</div>
+	<div class="step-3">
+		<p>Votre image est ajoutée avec succés !</p>
+	</div>
+</ncp-file-upload>
+

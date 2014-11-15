@@ -123,34 +123,12 @@ module.exports = function(app, io){
 		app.post('/api/medias/add', function(req, res){
 			/* Prepare string base64 to be transform. in binary */
 			var file = req.body.file.replace(/^data:image\/\w+;base64,/, "");
-			Cloud.put({file: new Buffer(file, 'base64')}, function(response){
-		    	res.status(200).send(response);
-		    });
-
-			/* TODO : to delete after test upload 
-			var options = {
-				host: 'a.dilcdn.com',
-				port: 80,
-				path: '/bl/wp-content/uploads/sites/8/2012/09/02-11.jpg'
-			};
-
-			http.get(options, function(response){
-				response.setEncoding('binary');
-				var d = '';
-			    response.on('data', function(chunk){
-			        d += chunk;
-			    })
-
-			    response.on('end', function(){
-			    	var base64Data = new Buffer(d, 'binary').toString('base64')
-			    	  , binaryData = new Buffer(base64Data, 'base64');
-
-			    	Cloud.put({file: binaryData}, function(response){
-				    	res.status(200).send(response);
-				    });
-				});
-			});
-			*/		
+			Cloud.put({file: new Buffer(file, 'base64')}, function(r){
+				/* Trigger Event Socket */
+				io.sockets.emit('new media', {url: r.data.file.url});
+				/* return response to http resquest */
+				res.status(200).json(r);
+		    });		
 		});
 
 		return true;
