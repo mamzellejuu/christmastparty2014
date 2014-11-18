@@ -2,12 +2,13 @@
 	<div class="step-1">
 		<form name="fileUploader" id="fileUploader">
 			<label>Téléchargez une image :</label>
-			<input type="file" id="fileUpload" name="fileUpload" accept="image/png;image/jpeg;image/jpg;" />
+			<input type="file" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
 		</form>
 	</div>
 	<div class="step-2">
-		<canvas id="imageCanvas" width="300" height="300"></canvas>
+		<canvas id="imageCanvas" width="300" height="300" style="background: gray;"></canvas>
 		<p><a href="#" ng-click="upload()">Télécharger</a> | <a href="#" ng-click="reset()">Annuler</a></p>
+		<p><a href="#" ng-click="rotation()">Rotation de 90 deg.</a></p>
 	</div>
 	<div class="step-3">
 		<p>Votre image est ajoutée avec succés !</p>

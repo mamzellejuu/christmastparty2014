@@ -65,7 +65,12 @@ NCP.app.config([
         */
         $routeProvider.when('/grid',{ //Image Grid
         	templateUrl: PATH.VIEWS_PATH + '/grid.html',
-        	controller: NCP.app.GridCtrl
+        	controller: NCP.app.GridCtrl,
+            resolve: {
+                'Medias': ['MediasService', function(MediasService){
+                    return MediasService.get();
+                }]
+            }
         }).when('/list',{ //Image List for Delete actions
         	templateUrl: PATH.VIEWS_PATH + '/list.html',
         	controller: NCP.app.ListCtrl
@@ -77,6 +82,74 @@ NCP.app.config([
 ]).run(['$log', function($log){
  	$log.info('Application running...');
 }]);
+(function(ng, NCP) {
+	/**
+	 * @desc Ctrl dependencies
+	*/
+	var service = [
+		'$http',
+		'$q',
+		'$log'
+	];
+
+	/**
+	 * @desc Ctrl
+	*/
+	service.push(function($http, $q, $log) {
+		var apiUrl = '/api';
+		
+		return {
+			get: function(){
+				var url = apiUrl + '/medias/list'
+				  , deferred = $q.defer();
+
+				$http.get(url).then(function(r, status){
+					var d = r.data;
+					if(d.success){
+						deferred.resolve(d.data);
+					} else deferred.reject();
+				}, function(error, status){
+					deferred.reject();
+				});
+
+				return deferred.promise;
+			},
+
+			create: function(p_mediaData){
+				var url = apiUrl + '/medias/add'
+				  , params = {file: p_mediaData}
+				  , deferred = $q.defer();
+
+				$http.post(url, params).then(function(data, status){
+					deferred.resolve(data);
+				}, function(data, status){
+					deferred.reject();
+				});
+
+				return deferred.promise;
+			},
+
+			delete: function(p_mediaId){
+				var url = apiUrl + '/medias/delete'
+				  , params = {id: p_mediaId}
+				  , deferred = $q.defer();
+
+				$http.post(url, params).then(function(data, status){
+					deferred.resolve(data);
+				}, function(error, status){
+					deferred.reject();
+				});
+
+				return deferred.promise;
+			}
+		}
+	});
+
+	/**
+	 * @desc
+	*/
+	NCP.app.factory('MediasService', service);
+})(angular, NCP);
 (function(ng, NCP){
 	/**
 	 * File Uploader Manager Class
@@ -92,6 +165,8 @@ NCP.app.config([
 		this.file = $('input[type="file"]');
 		this.reader = new FileReader();
 		this.canvas = $('canvas', this.container)[0] || null;
+		this.rotation = 0;
+		this.data = null;
 		if(!this.canvas){
 			throw new Error('A canvas HTML element is required to FileUploadManager instance works well !');
 		}
@@ -116,7 +191,7 @@ NCP.app.config([
 
 					/* Image loading preview */
 					img.onload = function(){
-						self.preview(img);
+						self.preview(img, 90);
 					};
 
 					/* Load image data */
@@ -139,15 +214,21 @@ NCP.app.config([
 			return data;
 		},
 
-		preview: function(img){
+		preview: function(img, rotation){
 			var settings = this.getPreviewSettings(img.width, img.height)
 			  , left = settings.targetLeft
 			  , top = settings.targetTop
 			  , width = settings.width
 			  , height = settings.height
-			  , ctx = this.canvas.getContext('2d');
+			  , size = width
+			  , ctx = this.canvas.getContext('2d')
+			  , rotation = rotation || 0;
 
+			/* Rotate */
 			ctx.drawImage(img, left, top, width, height);
+			/* Set data */
+			this.data = this.canvas.toDataURL();
+
 			return this;
 		},
 
@@ -192,6 +273,28 @@ NCP.app.config([
 			ctx.clearRect (0, 0, size, size);
 
 			return this;
+		},
+
+		rotate: function(){
+			var img = new Image()
+			  , src = this.data
+			  , ctx = this.canvas.getContext('2d')
+			  , size = this.options.size
+			  , center = size/2;
+
+			this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
+
+			if(src.length){
+				img.src = src;
+				ctx.save();
+				ctx.clearRect (0, 0, size, size);
+				ctx.translate(center, center);
+				ctx.rotate(this.rotation*Math.PI/180);
+				ctx.drawImage(img, -1*center, -1*center, size, size);
+				ctx.restore();
+			}
+
+			return this;
 		}
 	});
 
@@ -199,10 +302,10 @@ NCP.app.config([
 	var directive = [
 		'$log',
 		'$timeout',
-		'$http'
+		'MediasService'
 	];
 
-	directive.push(function($log, $timeout, $http){
+	directive.push(function($log, $timeout, MediasService){
 		var fileUploadManager = null
 		  , successEventName = 'onSuccessUpload'
 		  , serviceUrl = '/api/medias/add';
@@ -211,9 +314,9 @@ NCP.app.config([
 			$scope.upload = function(){
 				var data = fileUploadManager.getData();
 				if(data){
-					$http.post(serviceUrl, {file: data}).success(function(data, status){
+					MediasService.create(data).then(function(data, status){
 						$scope.$emit(successEventName);
-					}).error(function(data, status){
+					}, function(data, status){
 						alert('Serveur error !!!!');
 					});
 				} else {
@@ -224,6 +327,10 @@ NCP.app.config([
 			/* Reset form && restart upload process */
 			$scope.reset = function(){
 				fileUploadManager.reset();
+			};
+
+			$scope.rotation = function(){
+				fileUploadManager.rotate();
 			};
 		}];
 
@@ -259,24 +366,21 @@ NCP.app.config([
 	directive.push(function($log, $timeout){
 		return {
 			restrict: 'A',
-			link: function($scope, elem, attrs){
-				/* Elements not listed in the grid */
-				var elts = [];
-				for(var i = 0; i < 10; i++)
-					elts.push('image-added-' + i + '.jpg');
-				$scope.elements = elts;
-				
-				var event = attrs.ncpMediasGrid;
+			require: 'ngModel',
+			link: function($scope, elem, attrs, ngModel){
+				var eventName = attrs.ncpMediasGrid;
 				/* Listener for last frame repeat iteration */
-				$scope.$on(event, function(e){
+				$scope.$on(eventName, function(e){
 					$timeout(function(){
-						var grid = Grid.configure({}).run();
+						var grid = Grid.configure({}).run()
+						  , elements = ngModel.$viewValue;
+
 						if(grid.length()){
 							var options = {
 								delay: 7*1000
 							};
-							
-							var dispatcher = new Dispatcher(grid.getData(), $scope.elements, options);
+
+							var dispatcher = new Dispatcher(grid.getData(), elements, options);
 							$(dispatcher).bind('Dispatcher::picked', function(evt, data){
 								/* Make transition in grid */
 								grid.framelize(data);
@@ -325,18 +429,38 @@ NCP.app.config([
 	*/
 	var ctrl = [
 		'$scope',
-		'$log'
+		'$log',
+		'Medias'
 	];
 
 	/**
 	 * @desc Ctrl
 	*/
-	ctrl.push(function($scope, $log) {
-		var items = [];
-		for(i = 0, l = 15; i < l; i++)
-			items.push(i);
-			
-		$scope.items = items;
+	ctrl.push(function($scope, $log, Medias) {
+		var length = 5
+		  , grid = []
+		  , items = []
+		  , limit = (Medias.length >= length)? length : Medias.length;
+
+		/* Items for Grid */
+		for(var i = 0; i < limit; i++){
+			var item = Medias[i];
+			grid.push(item.file.url);
+		}
+
+		/* Elements to add in grid after load */
+		if(Medias.length > limit){
+			var limit = Medias.length;
+			for(; i < limit; i++){
+				var item = Medias[i];
+				items.push(item.file.url);
+			}
+		}
+
+		$scope.data = {
+			grid: grid,
+			items: items
+		};
 	});
 
 	/**

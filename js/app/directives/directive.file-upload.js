@@ -13,6 +13,8 @@
 		this.file = $('input[type="file"]');
 		this.reader = new FileReader();
 		this.canvas = $('canvas', this.container)[0] || null;
+		this.rotation = 0;
+		this.data = null;
 		if(!this.canvas){
 			throw new Error('A canvas HTML element is required to FileUploadManager instance works well !');
 		}
@@ -37,7 +39,7 @@
 
 					/* Image loading preview */
 					img.onload = function(){
-						self.preview(img);
+						self.preview(img, 90);
 					};
 
 					/* Load image data */
@@ -60,15 +62,21 @@
 			return data;
 		},
 
-		preview: function(img){
+		preview: function(img, rotation){
 			var settings = this.getPreviewSettings(img.width, img.height)
 			  , left = settings.targetLeft
 			  , top = settings.targetTop
 			  , width = settings.width
 			  , height = settings.height
-			  , ctx = this.canvas.getContext('2d');
+			  , size = width
+			  , ctx = this.canvas.getContext('2d')
+			  , rotation = rotation || 0;
 
+			/* Rotate */
 			ctx.drawImage(img, left, top, width, height);
+			/* Set data */
+			this.data = this.canvas.toDataURL();
+
 			return this;
 		},
 
@@ -113,6 +121,28 @@
 			ctx.clearRect (0, 0, size, size);
 
 			return this;
+		},
+
+		rotate: function(){
+			var img = new Image()
+			  , src = this.data
+			  , ctx = this.canvas.getContext('2d')
+			  , size = this.options.size
+			  , center = size/2;
+
+			this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
+
+			if(src.length){
+				img.src = src;
+				ctx.save();
+				ctx.clearRect (0, 0, size, size);
+				ctx.translate(center, center);
+				ctx.rotate(this.rotation*Math.PI/180);
+				ctx.drawImage(img, -1*center, -1*center, size, size);
+				ctx.restore();
+			}
+
+			return this;
 		}
 	});
 
@@ -120,10 +150,10 @@
 	var directive = [
 		'$log',
 		'$timeout',
-		'$http'
+		'MediasService'
 	];
 
-	directive.push(function($log, $timeout, $http){
+	directive.push(function($log, $timeout, MediasService){
 		var fileUploadManager = null
 		  , successEventName = 'onSuccessUpload'
 		  , serviceUrl = '/api/medias/add';
@@ -132,9 +162,9 @@
 			$scope.upload = function(){
 				var data = fileUploadManager.getData();
 				if(data){
-					$http.post(serviceUrl, {file: data}).success(function(data, status){
+					MediasService.create(data).then(function(data, status){
 						$scope.$emit(successEventName);
-					}).error(function(data, status){
+					}, function(data, status){
 						alert('Serveur error !!!!');
 					});
 				} else {
@@ -145,6 +175,10 @@
 			/* Reset form && restart upload process */
 			$scope.reset = function(){
 				fileUploadManager.reset();
+			};
+
+			$scope.rotation = function(){
+				fileUploadManager.rotate();
 			};
 		}];
 

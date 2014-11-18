@@ -45,7 +45,12 @@ NCP.app.config([
         */
         $routeProvider.when('/grid',{ //Image Grid
         	templateUrl: PATH.VIEWS_PATH + '/grid.html',
-        	controller: NCP.app.GridCtrl
+        	controller: NCP.app.GridCtrl,
+            resolve: {
+                'Medias': ['MediasService', function(MediasService){
+                    return MediasService.get();
+                }]
+            }
         }).when('/list',{ //Image List for Delete actions
         	templateUrl: PATH.VIEWS_PATH + '/list.html',
         	controller: NCP.app.ListCtrl

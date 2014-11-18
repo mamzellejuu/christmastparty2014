@@ -92,8 +92,8 @@ module.exports = function(app, io){
 		 * 		data: null
 		 * }
 		*/
-		app.post('/api/medias/delete/:mediaID', function(req, res){
-			var mediaID = req.params['mediaID'];
+		app.post('/api/medias/delete', function(req, res){
+			var mediaID = req.body.id;
 			Cloud.del(mediaID, function(response){
 				res.status(200).send(response);
 			});

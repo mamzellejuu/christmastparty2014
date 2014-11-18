@@ -7,24 +7,21 @@
 	directive.push(function($log, $timeout){
 		return {
 			restrict: 'A',
-			link: function($scope, elem, attrs){
-				/* Elements not listed in the grid */
-				var elts = [];
-				for(var i = 0; i < 10; i++)
-					elts.push('image-added-' + i + '.jpg');
-				$scope.elements = elts;
-				
-				var event = attrs.ncpMediasGrid;
+			require: 'ngModel',
+			link: function($scope, elem, attrs, ngModel){
+				var eventName = attrs.ncpMediasGrid;
 				/* Listener for last frame repeat iteration */
-				$scope.$on(event, function(e){
+				$scope.$on(eventName, function(e){
 					$timeout(function(){
-						var grid = Grid.configure({}).run();
+						var grid = Grid.configure({}).run()
+						  , elements = ngModel.$viewValue;
+
 						if(grid.length()){
 							var options = {
 								delay: 7*1000
 							};
-							
-							var dispatcher = new Dispatcher(grid.getData(), $scope.elements, options);
+
+							var dispatcher = new Dispatcher(grid.getData(), elements, options);
 							$(dispatcher).bind('Dispatcher::picked', function(evt, data){
 								/* Make transition in grid */
 								grid.framelize(data);
