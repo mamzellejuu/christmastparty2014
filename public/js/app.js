@@ -18,6 +18,48 @@ $('document').ready(function(){
 		console.log(e);
 	}
 });
+
+
+var section1 = $('section#one');
+var section2 = $('section#dos');
+var section3 = $('section#trio');
+var section4 = $('section#quatro');
+var section = $('section');
+var body = $('body');
+
+
+
+
+
+// function HideAllShowOne(number){
+// 	section.addClass('hidden');
+// 	$('section #dos').toggleClass('hidden');
+// }
+
+function scrollTo(number){
+    $('html body').animate({
+        scrollTop: number.offset().top
+    }, 300);
+}
+
+
+$('#one-step').click(function() {
+	scrollTo(section2);
+});
+$('#two-step').click(function() {
+	scrollTo(section3);
+});
+
+function init(){
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+}
+
+
+
+$('document').ready(function(){
+	init();
+});
+
 /**
  * @desc Global namespace Videotron Espace Client App
 */
@@ -228,7 +270,12 @@ NCP.app.config([
 			ctx.drawImage(img, left, top, width, height);
 			/* Set data */
 			this.data = this.canvas.toDataURL();
-
+			$('#logo').fadeOut();
+			$('#dos').fadeIn('slow');
+			// $('html, html body').animate({
+		 //        scrollTop: $('#dos').offset().top
+		 //    }, 300);
+		    $('#one').fadeOut();
 			return this;
 		},
 
@@ -329,6 +376,14 @@ NCP.app.config([
 				fileUploadManager.reset();
 			};
 
+			$scope.restart = function(){
+				// $("html, body").animate({ scrollTop: 0 }, "fast");
+				$('#oklarge').removeClass('active');
+				$('#replay img').removeClass('active');
+				$('#one').fadeIn();
+				$('#trio').fadeOut();
+			};
+
 			$scope.rotation = function(){
 				fileUploadManager.rotate();
 			};
@@ -344,11 +399,17 @@ NCP.app.config([
 					fileUploadManager = new FileUploadManager(elem, {});
 					/* Fake feed back */
 					$scope.$on(successEventName, function(){
-						var $c = $('.step-3 p', elem).css({background: 'green'});
+						$('#trio').fadeIn('fast');
+						// $('html, html body').animate({
+						// 	scrollTop: $('#trio').offset().top
+						// }, 200);
+						$('#dos').fadeOut();
 						$timeout(function(){
-							$c.css({background: 'none'});
+							$('#logo').fadeIn();
+							$('#oklarge').addClass('active');
+							$('#replay img').addClass('active');
 							fileUploadManager.reset();
-						}, 1000, false);
+						}, 60, false);
 					});
 				}
 			}

@@ -76,7 +76,12 @@
 			ctx.drawImage(img, left, top, width, height);
 			/* Set data */
 			this.data = this.canvas.toDataURL();
-
+			$('#logo').fadeOut();
+			$('#dos').fadeIn('slow');
+			// $('html, html body').animate({
+		 //        scrollTop: $('#dos').offset().top
+		 //    }, 300);
+		    $('#one').fadeOut();
 			return this;
 		},
 
@@ -177,6 +182,14 @@
 				fileUploadManager.reset();
 			};
 
+			$scope.restart = function(){
+				// $("html, body").animate({ scrollTop: 0 }, "fast");
+				$('#oklarge').removeClass('active');
+				$('#replay img').removeClass('active');
+				$('#one').fadeIn();
+				$('#trio').fadeOut();
+			};
+
 			$scope.rotation = function(){
 				fileUploadManager.rotate();
 			};
@@ -192,11 +205,17 @@
 					fileUploadManager = new FileUploadManager(elem, {});
 					/* Fake feed back */
 					$scope.$on(successEventName, function(){
-						var $c = $('.step-3 p', elem).css({background: 'green'});
+						$('#trio').fadeIn('fast');
+						// $('html, html body').animate({
+						// 	scrollTop: $('#trio').offset().top
+						// }, 200);
+						$('#dos').fadeOut();
 						$timeout(function(){
-							$c.css({background: 'none'});
+							$('#logo').fadeIn();
+							$('#oklarge').addClass('active');
+							$('#replay img').addClass('active');
 							fileUploadManager.reset();
-						}, 1000, false);
+						}, 60, false);
 					});
 				}
 			}

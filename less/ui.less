@@ -1,0 +1,158 @@
+html, body{
+	height: 100%;
+	width: 100%;
+	background-image: url(../img/bkg.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body{
+	.container{
+		height: 100%;
+	}
+	margin: 0;
+	padding: 0;
+	text-align: center;
+
+	#logo{
+		width: 100%;
+		position: fixed;
+		top: 20px;
+
+		img{
+			width: 100%;
+			max-width: 280px;
+		}
+	}
+
+	section{
+		width: 100%;
+		height: 100%;
+		position: relative;
+		&#one{
+			.btn{
+				top: 170px;
+			}
+			#fileUploader{
+				input{
+					display: none;
+				}
+			}
+		}
+		&#dos{
+			display: none;
+			#rotate{
+				position: relative;
+				top: 100px;
+				img{
+					width: 50px;
+				}
+			}
+			.frame{
+
+				width: 280px;
+				margin: 0 auto;
+				text-align: center;
+				position: relative;
+				top: 80px;
+				.btn{
+					position: absolute;
+					z-index: 999;
+					top: 90px;
+					left: 90px;
+					img{
+						width: 100px;
+						opacity: .6;
+					}
+				}
+				#frameimg{
+					max-width: 100%;
+					position: absolute;
+					top: 0;
+					z-index: 99;
+				}
+				canvas{
+					width: 270px;
+					height: 270px;
+					position: relative;
+					top: 5px;
+					left: 5px;
+					z-index: 9;
+
+				}
+			}
+		}
+		&#trio{
+			display: none;
+			.animate-success{
+				position: relative;
+				top: 200px;
+				#oklarge{
+					position: absolute;
+					width: 20px;
+					height: 20px;
+					top: 60px;
+					left: 50%;
+					margin-left: -10px;
+					transition: all 1000ms ease-out;
+					&.active{
+						transform:scale(10,10);
+						-webkit-transform:scale(30,30);
+						opacity: 0;
+					}
+				}
+				#replay{
+					position: absolute;
+					left: 50%;
+					width: 100px;
+					top: 25px;
+					margin-left: -50px;
+					
+					img{
+						width: 100%;
+						transition: all 500ms ease;
+						opacity: 0;
+						&.active{
+							opacity: 1;
+						}
+					}
+					&:hover{
+						img{
+							transform:rotate(45deg);
+							-webkit-transform:rotate(45deg);
+						}
+					}
+					&:active{
+						img{
+							transform:rotate(720deg);
+							-webkit-transform:rotate(720deg);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.btn{
+	position: relative;
+	cursor: pointer;
+	img{
+		transition: all 100ms ease;
+		max-width: 200px;
+	}
+	&:hover{
+		img{
+			transform:scale(1.05,1.05);
+			-webkit-transform:scale(1.05,1.05);
+		}
+	}
+	&:active{
+		img{
+			transform:scale(1,1);
+			-webkit-transform:scale(1,1);
+			opacity: 1!important;
+		}
+	}
+}

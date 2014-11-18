@@ -1,17 +1,44 @@
 <ncp-file-upload>
-	<div class="step-1">
-		<form name="fileUploader" id="fileUploader">
-			<label>Téléchargez une image :</label>
-			<input type="file" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
-		</form>
-	</div>
-	<div class="step-2">
-		<canvas id="imageCanvas" width="300" height="300" style="background: gray;"></canvas>
-		<p><a href="#" ng-click="upload()">Télécharger</a> | <a href="#" ng-click="reset()">Annuler</a></p>
-		<p><a href="#" ng-click="rotation()">Rotation de 90 deg.</a></p>
-	</div>
-	<div class="step-3">
-		<p>Votre image est ajoutée avec succés !</p>
+
+	<div class="container">
+		<!-- LOGO - ALWAYS_HERE -->
+		<div id="logo">
+			<img src="img/logo.png" />
+		</div>
+		
+		<!-- FIRST SECTION -->
+		<section id="one" class="step-1">
+			<form name="fileUploader" id="fileUploader">
+				    <label for="fileUpload">
+					    <div class="btn"><img src="img/apn.png" /></div>
+				    </label>
+					<input type="file" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
+			</form>
+			
+		</section>
+
+
+		<!-- SECOND SECTION -->
+
+
+		<section id="dos" class="step-2">
+			<div class="frame">
+				<a class="btn" id="two-step" ng-click="upload()"><img src="img/ok.png" /></a>
+				<img id="frameimg" src="img/frame.png" />
+				<canvas width="280" height="280" id="imageCanvas"></canvas>
+			</div>
+			<a href="#" ng-click="rotation()" id="rotate"><img src="img/rotate.png"></a>
+		</section>
+
+
+		<!-- THIRD SECTION -->
+		<section id="trio" class="step-3">
+			<div class="animate-success">
+				<img src="img/ok_large.png" id="oklarge" />
+				<a class="btn" id="replay" ng-click="restart()"><img src="img/replay.png" /></a>
+			</div>
+		</section>
+
 	</div>
 </ncp-file-upload>
 
