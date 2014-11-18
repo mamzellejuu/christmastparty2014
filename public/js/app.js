@@ -361,6 +361,7 @@ NCP.app.config([
 			$scope.upload = function(){
 				var data = fileUploadManager.getData();
 				if(data){
+					$scope.$emit('startUpload');
 					MediasService.create(data).then(function(data, status){
 						$scope.$emit(successEventName);
 					}, function(data, status){
@@ -377,11 +378,7 @@ NCP.app.config([
 			};
 
 			$scope.restart = function(){
-				// $("html, body").animate({ scrollTop: 0 }, "fast");
-				$('#oklarge').removeClass('active');
-				$('#replay img').removeClass('active');
-				$('#one').fadeIn();
-				$('#trio').fadeOut();
+				$scope.$emit('restart');
 			};
 
 			$scope.rotation = function(){
@@ -400,16 +397,25 @@ NCP.app.config([
 					/* Fake feed back */
 					$scope.$on(successEventName, function(){
 						$('#trio').fadeIn('fast');
-						// $('html, html body').animate({
-						// 	scrollTop: $('#trio').offset().top
-						// }, 200);
 						$('#dos').fadeOut();
 						$timeout(function(){
 							$('#logo').fadeIn();
-							$('#oklarge').addClass('active');
+							$timeout(function(){
+								$('#oklarge').addClass('active');
+							}, 60, false);
+							
 							$('#replay img').addClass('active');
 							fileUploadManager.reset();
 						}, 60, false);
+					});
+					$scope.$on('startUpload', function(){
+						// Jouer dans le DOM quand y'a succès!
+					});
+					$scope.$on('restart', function(){
+						$('#oklarge').removeClass('active');
+						$('#replay img').removeClass('active');
+						$('#one').fadeIn();
+						$('#trio').fadeOut();
 					});
 				}
 			}
