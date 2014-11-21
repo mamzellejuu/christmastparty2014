@@ -54,6 +54,19 @@ var Grid = (function($){
 			if(frames.length){
 				/* Build application components */
 				this.frames = frames;
+				for(var i = 0, l = frames.length; i < l; i++){
+					var $f = $(frames[i])
+					  , $frame = $('.main-frame', $f)
+					  , src = $f.data('url');
+
+					(function($frame, src){
+						var img = new Image();
+						img.onload = function(){
+							$frame.css({'background-image': 'url(' + src + ')'});
+						};
+						img.src = src;
+					})($frame, src);
+				}
 			}
 			
 			return this.setData().setOrder();
@@ -82,13 +95,40 @@ var Grid = (function($){
 					this.data.push(data);
 					/* Change pointer */
 					this.pointer = pointer;
-					$frame.html(data).css({background: 'red'}).data('url', data);
-					window.setTimeout(function(){
-						$frame.css({background: 'none'});
-					}, 3000);
+					/* Set Url in DOM */
+					$frame.data('url', data);
+					/* Prepare transition */
+					this.transition($frame, replace, transition);
 				}
 			}
 			
+			return this;
+		},
+
+		transition: function($container, o, animation){
+			var src = $container.data('url')
+			  , $frame = $('.main-frame', $container)
+			  , $transition = $('.transition-frame', $container);
+
+			/* Old Image */
+			$transition.css({'background-image': 'url(' + o + ')'});
+			/* New Image */
+			var img = new Image();
+			img.onload = function(){
+				$frame.css({'background-image': 'url(' + src + ')'});
+				if(animation){
+					$transition.animate({opacity: 0}, {
+						duration: 1000,
+						complete: function(){
+							$transition.css({'background-image': 'none', opacity: 1});
+						}
+					});
+				} else {
+					$transition.css({'background-image': 'none'});
+				}
+			};
+			img.src = src;
+
 			return this;
 		},
 		

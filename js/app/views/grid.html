@@ -1,8 +1,32 @@
-<div class="grid-wrapper" ncp-medias-grid="grid-frames-ready" ng-model="data.items">
-	<div ng-repeat="item in data.grid" data-url="{{ item }}" class="item" id="grid-frame-{{ $index }}" ncp-repeat-last="grid-frames-ready">
-		<span class="wrapper">
-			<span class="layer"></span>
-			<img ng-src="{{ item }}" />
-		</span>
+<div class="grid-wrapper">
+	<a href="#" ng-click="refresh()">Refresh</a>
+	<div class="grid-loader">
+		<img src="img/replay.png" />
+	</div>
+
+	<div class="grid-container" ncp-medias-grid="grid-frames-ready" ng-model="data.items">
+		<div ng-repeat="item in data.structure.normal.data" data-url="{{ item }}" class="item" id="grid-frame-normal-{{ $index }}">
+			<span class="wrapper">
+				<span class="frame-border"></span>
+				<span class="frame transition-frame"></span>
+				<span class="frame main-frame"></span>
+			</span>
+		</div>
+
+		<div ng-repeat="item in data.structure.medium.data" data-url="{{ item }}" class="item medium" id="grid-frame-medium-{{ $index }}">
+			<span class="wrapper">
+				<span class="frame-border"></span>
+				<span class="frame transition-frame"></span>
+				<span class="frame main-frame"></span>
+			</span>
+		</div>
+
+		<div ng-repeat="item in data.structure.large.data" data-url="{{ item }}" class="item large" id="grid-frame-large-{{ $index }}" ncp-repeat-last="grid-frames-ready">
+			<span class="wrapper">
+				<span class="frame-border"></span>
+				<span class="frame transition-frame"></span>
+				<span class="frame main-frame"></span>
+			</span>
+		</div>
 	</div>
 </div>

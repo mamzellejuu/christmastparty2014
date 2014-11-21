@@ -1,64 +1,3 @@
-$('document').ready(function(){
-	/* Test Socket IO Only on default url / */
-	var path = window.location.pathname;
-	if(path == '/'){
-		var socket = io();
-		socket.on('new media', function(data){
-			console.log('Socket - main.js : ' + JSON.stringify(data));
-		});
-
-		socket.on('delete media', function(data){
-			console.log(data);
-		});
-	}
-	
-	try {
-		var g = Grid.configure({}).run();
-	} catch(e){
-		console.log(e);
-	}
-});
-
-
-var section1 = $('section#one');
-var section2 = $('section#dos');
-var section3 = $('section#trio');
-var section4 = $('section#quatro');
-var section = $('section');
-var body = $('body');
-
-
-
-
-
-// function HideAllShowOne(number){
-// 	section.addClass('hidden');
-// 	$('section #dos').toggleClass('hidden');
-// }
-
-function scrollTo(number){
-    $('html body').animate({
-        scrollTop: number.offset().top
-    }, 300);
-}
-
-
-$('#one-step').click(function() {
-	scrollTo(section2);
-});
-$('#two-step').click(function() {
-	scrollTo(section3);
-});
-
-function init(){
-	$("html, body").animate({ scrollTop: 0 }, "slow");
-}
-
-
-
-$('document').ready(function(){
-	init();
-});
 
 /**
  * @desc Global namespace Videotron Espace Client App
@@ -193,6 +132,75 @@ NCP.app.config([
 	NCP.app.factory('MediasService', service);
 })(angular, NCP);
 (function(ng, NCP){
+	/***/
+	var Grid = (function(){
+		var n = 15
+		  , m = 5
+		  , l = 2
+		  , limit = n + m + l;
+
+		/**
+		* @desc Base Grid Structure
+		*/
+		var structure = {
+	  		normal: {
+	  			data: [],
+	  			length: n
+	  		},
+	  		medium: {
+	  			data: [],
+	  			length: m
+	  		},
+	  		large: {
+	  			data: [],
+	  			length: l
+	  		}
+	  	};
+
+		return {
+			/***/
+			get: function(data){
+				var r = ng.extend({}, {}, structure)
+				  , j = 0;
+
+				/* Build structure */
+				for(var p in r){
+					if(p != 'spacers'){
+						var limit = r[p].length;
+						for(var i = 0; i < limit; i++, j++){
+							var f = data[j] || '';
+							r[p].data.push(f);
+						}
+					}
+				}
+
+				return r;
+			},
+
+			length: function(){
+				return limit; 
+			}
+		}
+	})();
+
+	NCP.app.factory('GridModel', [function(){
+		return {
+			grid: function(){
+
+			},
+			items: function(){
+				
+			},
+			get: function(data){
+				return Grid.get(data);
+			},
+			length: function(){
+				return Grid.length();
+			}
+		}
+	}]);
+})(angular, NCP);
+(function(ng, NCP){
 	/**
 	 * File Uploader Manager Class
 	*/
@@ -270,12 +278,9 @@ NCP.app.config([
 			ctx.drawImage(img, left, top, width, height);
 			/* Set data */
 			this.data = this.canvas.toDataURL();
-			$('#logo').fadeOut();
-			$('#dos').fadeIn('slow');
-			// $('html, html body').animate({
-		 //        scrollTop: $('#dos').offset().top
-		 //    }, 300);
-		    $('#one').fadeOut();
+			/* Event */
+			$(this).trigger('previewFileUpload', [this]);
+
 			return this;
 		},
 
@@ -332,13 +337,17 @@ NCP.app.config([
 			this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
 
 			if(src.length){
+				var self = this;
+				img.onload = function(){
+					ctx.save();
+					ctx.clearRect (0, 0, size, size);
+					ctx.translate(center, center);
+					ctx.rotate(self.rotation*Math.PI/180);
+					ctx.drawImage(img, -1*center, -1*center, size, size);
+					ctx.restore();
+				};
+
 				img.src = src;
-				ctx.save();
-				ctx.clearRect (0, 0, size, size);
-				ctx.translate(center, center);
-				ctx.rotate(this.rotation*Math.PI/180);
-				ctx.drawImage(img, -1*center, -1*center, size, size);
-				ctx.restore();
 			}
 
 			return this;
@@ -358,17 +367,24 @@ NCP.app.config([
 		  , serviceUrl = '/api/medias/add';
 
 		var ctrl = ['$scope', function($scope){
+			var process = false;
 			$scope.upload = function(){
 				var data = fileUploadManager.getData();
-				if(data){
+				if(data && !process){
+					/* DOM manipulation */
 					$scope.$emit('startUpload');
+					/* Start request */
+					process = true;
+					/* Service Call*/
 					MediasService.create(data).then(function(data, status){
 						$scope.$emit(successEventName);
+						process = false;
 					}, function(data, status){
-						alert('Serveur error !!!!');
+						alert('Oups... il semble que ce soit FG. qui soit le developpeur de cette chose !!!! Désolé... venez me voir pour me remercier quand même !');
+						process = false;
 					});
 				} else {
-					alert('Error !!!!');
+					alert('Oups... ça nous prend un fichier image et beaucoup de patience... recommence on ne sait jamais !!!!');
 				}
 			};
 
@@ -392,30 +408,50 @@ NCP.app.config([
 			link: function($scope, elem, attrs){
 				var $form = $('form', elem);
 				if($form.length){
+					/* DOM elements */
+					var $trio = $('#trio', elem)
+					  , $dos = $('#dos', elem)
+					  , $one = $('#one', elem)
+					  , $logo = $('#logo', elem)
+					  , $okLarge = $('#oklarge', elem)
+					  , $replayImg = $('#replay img', elem);
+
+
 					/* Instance of FileUploadManager Class */
 					fileUploadManager = new FileUploadManager(elem, {});
+					/* On preview */
+					$(fileUploadManager).bind('previewFileUpload', function(){
+						$logo.fadeOut();
+						$dos.fadeIn('slow');
+		    			$one.fadeOut();
+					});
+
 					/* Fake feed back */
 					$scope.$on(successEventName, function(){
-						$('#trio').fadeIn('fast');
-						$('#dos').fadeOut();
+						$trio.fadeIn('fast');
+						$dos.fadeOut();
 						$timeout(function(){
-							$('#logo').fadeIn();
+							$logo.fadeIn();
 							$timeout(function(){
-								$('#oklarge').addClass('active');
+								$okLarge.addClass('active');
 							}, 60, false);
 							
-							$('#replay img').addClass('active');
+							$replayImg.addClass('active');
 							fileUploadManager.reset();
 						}, 60, false);
 					});
+
 					$scope.$on('startUpload', function(){
 						// Jouer dans le DOM quand y'a succès!
+						$dos.animate({opacity: 0.3});
 					});
+
 					$scope.$on('restart', function(){
-						$('#oklarge').removeClass('active');
-						$('#replay img').removeClass('active');
-						$('#one').fadeIn();
-						$('#trio').fadeOut();
+						$okLarge.removeClass('active');
+						$replayImg.removeClass('active');
+						$one.fadeIn();
+						$trio.fadeOut();
+						$dos.css({opacity: 1});
 					});
 				}
 			}
@@ -441,16 +477,35 @@ NCP.app.config([
 					$timeout(function(){
 						var grid = Grid.configure({}).run()
 						  , elements = ngModel.$viewValue;
+						  
+						elem.isotope({
+						  itemSelector: '.item',
+						  masonry: {
+						  	gutter: 30
+						  }
+						});
+
+						$timeout(function(){
+							elem.isotope('shuffle');
+						}, 500, false);
+
+						window.setInterval(function(){
+							elem.isotope('shuffle');
+						}, 0.1*60*1000);
 
 						if(grid.length()){
 							var options = {
-								delay: 7*1000
+								delay: 2*1000,
+								grid: {
+									shuffle: true,
+									delay: 0.1*60*1000
+								}
 							};
 
 							var dispatcher = new Dispatcher(grid.getData(), elements, options);
 							$(dispatcher).bind('Dispatcher::picked', function(evt, data){
 								/* Make transition in grid */
-								grid.framelize(data);
+								grid.framelize(data, true);
 								/* Update excluded elements */
 								dispatcher.setExcluded(grid.getData());
 							});
@@ -469,6 +524,31 @@ NCP.app.config([
 	});
 
 	NCP.app.directive('ncpMediasGrid', directive);
+})(angular, NCP);
+(function(ng, NCP){
+	var directive = [
+		'$log',
+		'$timeout',
+		'$location'
+	];
+
+	directive.push(function($log, $timeout, $location){
+		return {
+			restrict: 'A',
+			link: function($scope, elem, attrs){
+				var path = $location.path()
+				  , name = 'main';
+
+				if(path == '/grid'){
+					name = 'main-grid';
+				}
+
+				elem.addClass(name); 
+			}
+		}
+	});
+
+	NCP.app.directive('ncpContextClass', directive);
 })(angular, NCP);
 (function(ng, NCP){
 	var directive = [
@@ -497,14 +577,16 @@ NCP.app.config([
 	var ctrl = [
 		'$scope',
 		'$log',
-		'Medias'
+		'Medias',
+		'GridModel'
 	];
 
 	/**
 	 * @desc Ctrl
 	*/
-	ctrl.push(function($scope, $log, Medias) {
-		var length = 5
+	ctrl.push(function($scope, $log, Medias, GridModel) {
+
+		var length = GridModel.length()
 		  , grid = []
 		  , items = []
 		  , limit = (Medias.length >= length)? length : Medias.length;
@@ -526,7 +608,8 @@ NCP.app.config([
 
 		$scope.data = {
 			grid: grid,
-			items: items
+			items: items,
+			structure: Structure.get(grid)
 		};
 	});
 

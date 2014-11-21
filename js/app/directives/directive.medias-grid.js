@@ -15,16 +15,35 @@
 					$timeout(function(){
 						var grid = Grid.configure({}).run()
 						  , elements = ngModel.$viewValue;
+						  
+						elem.isotope({
+						  itemSelector: '.item',
+						  masonry: {
+						  	gutter: 30
+						  }
+						});
+
+						$timeout(function(){
+							elem.isotope('shuffle');
+						}, 500, false);
+
+						window.setInterval(function(){
+							elem.isotope('shuffle');
+						}, 0.1*60*1000);
 
 						if(grid.length()){
 							var options = {
-								delay: 7*1000
+								delay: 2*1000,
+								grid: {
+									shuffle: true,
+									delay: 0.1*60*1000
+								}
 							};
 
 							var dispatcher = new Dispatcher(grid.getData(), elements, options);
 							$(dispatcher).bind('Dispatcher::picked', function(evt, data){
 								/* Make transition in grid */
-								grid.framelize(data);
+								grid.framelize(data, true);
 								/* Update excluded elements */
 								dispatcher.setExcluded(grid.getData());
 							});

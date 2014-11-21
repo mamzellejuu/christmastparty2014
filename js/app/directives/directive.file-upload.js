@@ -76,12 +76,9 @@
 			ctx.drawImage(img, left, top, width, height);
 			/* Set data */
 			this.data = this.canvas.toDataURL();
-			$('#logo').fadeOut();
-			$('#dos').fadeIn('slow');
-			// $('html, html body').animate({
-		 //        scrollTop: $('#dos').offset().top
-		 //    }, 300);
-		    $('#one').fadeOut();
+			/* Event */
+			$(this).trigger('previewFileUpload', [this]);
+
 			return this;
 		},
 
@@ -138,13 +135,17 @@
 			this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
 
 			if(src.length){
+				var self = this;
+				img.onload = function(){
+					ctx.save();
+					ctx.clearRect (0, 0, size, size);
+					ctx.translate(center, center);
+					ctx.rotate(self.rotation*Math.PI/180);
+					ctx.drawImage(img, -1*center, -1*center, size, size);
+					ctx.restore();
+				};
+
 				img.src = src;
-				ctx.save();
-				ctx.clearRect (0, 0, size, size);
-				ctx.translate(center, center);
-				ctx.rotate(this.rotation*Math.PI/180);
-				ctx.drawImage(img, -1*center, -1*center, size, size);
-				ctx.restore();
 			}
 
 			return this;
@@ -164,17 +165,24 @@
 		  , serviceUrl = '/api/medias/add';
 
 		var ctrl = ['$scope', function($scope){
+			var process = false;
 			$scope.upload = function(){
 				var data = fileUploadManager.getData();
-				if(data){
+				if(data && !process){
+					/* DOM manipulation */
 					$scope.$emit('startUpload');
+					/* Start request */
+					process = true;
+					/* Service Call*/
 					MediasService.create(data).then(function(data, status){
 						$scope.$emit(successEventName);
+						process = false;
 					}, function(data, status){
-						alert('Serveur error !!!!');
+						alert('Oups... il semble que ce soit FG. qui soit le developpeur de cette chose !!!! Désolé... venez me voir pour me remercier quand même !');
+						process = false;
 					});
 				} else {
-					alert('Error !!!!');
+					alert('Oups... ça nous prend un fichier image et beaucoup de patience... recommence on ne sait jamais !!!!');
 				}
 			};
 
@@ -198,30 +206,50 @@
 			link: function($scope, elem, attrs){
 				var $form = $('form', elem);
 				if($form.length){
+					/* DOM elements */
+					var $trio = $('#trio', elem)
+					  , $dos = $('#dos', elem)
+					  , $one = $('#one', elem)
+					  , $logo = $('#logo', elem)
+					  , $okLarge = $('#oklarge', elem)
+					  , $replayImg = $('#replay img', elem);
+
+
 					/* Instance of FileUploadManager Class */
 					fileUploadManager = new FileUploadManager(elem, {});
+					/* On preview */
+					$(fileUploadManager).bind('previewFileUpload', function(){
+						$logo.fadeOut();
+						$dos.fadeIn('slow');
+		    			$one.fadeOut();
+					});
+
 					/* Fake feed back */
 					$scope.$on(successEventName, function(){
-						$('#trio').fadeIn('fast');
-						$('#dos').fadeOut();
+						$trio.fadeIn('fast');
+						$dos.fadeOut();
 						$timeout(function(){
-							$('#logo').fadeIn();
+							$logo.fadeIn();
 							$timeout(function(){
-								$('#oklarge').addClass('active');
+								$okLarge.addClass('active');
 							}, 60, false);
 							
-							$('#replay img').addClass('active');
+							$replayImg.addClass('active');
 							fileUploadManager.reset();
 						}, 60, false);
 					});
+
 					$scope.$on('startUpload', function(){
 						// Jouer dans le DOM quand y'a succès!
+						$dos.animate({opacity: 0.3});
 					});
+
 					$scope.$on('restart', function(){
-						$('#oklarge').removeClass('active');
-						$('#replay img').removeClass('active');
-						$('#one').fadeIn();
-						$('#trio').fadeOut();
+						$okLarge.removeClass('active');
+						$replayImg.removeClass('active');
+						$one.fadeIn();
+						$trio.fadeOut();
+						$dos.css({opacity: 1});
 					});
 				}
 			}

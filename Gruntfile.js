@@ -35,6 +35,7 @@ module.exports = function (grunt) {
             vendors: {
                 src: [ //libs - vendors JS
                     'js/libs/jquery-2.1.1.js',
+                    'js/libs/isotope.pkgd.min.js',
                     'js/libs/grid.js',
                     'js/libs/dispatcher.js',
                     'js/vendors/angular.js',

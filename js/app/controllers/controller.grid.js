@@ -5,14 +5,16 @@
 	var ctrl = [
 		'$scope',
 		'$log',
-		'Medias'
+		'Medias',
+		'GridModel'
 	];
 
 	/**
 	 * @desc Ctrl
 	*/
-	ctrl.push(function($scope, $log, Medias) {
-		var length = 5
+	ctrl.push(function($scope, $log, Medias, GridModel) {
+
+		var length = GridModel.length()
 		  , grid = []
 		  , items = []
 		  , limit = (Medias.length >= length)? length : Medias.length;
@@ -34,7 +36,8 @@
 
 		$scope.data = {
 			grid: grid,
-			items: items
+			items: items,
+			structure: Structure.get(grid)
 		};
 	});
 

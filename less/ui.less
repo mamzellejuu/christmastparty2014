@@ -15,6 +15,10 @@ body{
 	padding: 0;
 	text-align: center;
 
+	&.main {
+		overflow: hidden;
+	}
+
 	#logo{
 		width: 100%;
 		position: fixed;
@@ -87,12 +91,17 @@ body{
 			display: none;
 			.animate-success{
 				position: relative;
-				top: 200px;
+				top: 0px;
+				max-width: 100%;
+				min-width: 200px;
+				min-height: 100%;
+				overflow: hidden;
+
 				#oklarge{
 					position: absolute;
 					width: 20px;
 					height: 20px;
-					top: 60px;
+					top: 260px;
 					left: 50%;
 					margin-left: -10px;
 					transition: all 1000ms ease-out;
@@ -106,7 +115,7 @@ body{
 					position: absolute;
 					left: 50%;
 					width: 100px;
-					top: 25px;
+					top: 225px;
 					margin-left: -50px;
 					
 					img{
@@ -117,6 +126,7 @@ body{
 							opacity: 1;
 						}
 					}
+					
 					&:hover{
 						img{
 							transform:rotate(45deg);
