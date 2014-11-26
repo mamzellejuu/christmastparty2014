@@ -1,4 +1,4 @@
-module.exports = function(app, urls, io){
+module.exports = function(app, urls){
     /* Run Angular application with load index.html */
     function getApplication(req, res){
         res.setHeader('Content-Type', 'text/html');

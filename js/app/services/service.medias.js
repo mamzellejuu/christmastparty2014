@@ -15,8 +15,9 @@
 		var apiUrl = '/api';
 		
 		return {
-			get: function(){
-				var url = apiUrl + '/medias/list'
+			get: function(limit){
+				var limit = limit || 100
+				  , url = apiUrl + '/medias/list/' + limit
 				  , deferred = $q.defer();
 
 				$http.get(url).then(function(r, status){

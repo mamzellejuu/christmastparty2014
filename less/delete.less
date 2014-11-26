@@ -1,0 +1,78 @@
+.main-list {
+	background: none;
+}
+
+body {
+	&.main-list {
+		background: #000;
+		position: relative;
+
+		ul {
+			margin: 0;
+			max-width: 600px;
+			margin: 0 auto;
+
+			li {
+				list-style: none;
+				text-align: left;
+
+				a {
+					color: #fff;
+				}
+			}
+
+			&.listing {
+				li {
+					float: left;
+					width: 120px;
+					position: relative;
+
+					img {
+						width: 100px; height: 100px;
+						margin: 25px auto 5px auto;
+						display: block;
+						border: 5px solid #fff;
+					}
+
+					a {
+						display: block;
+						text-align: center;
+					}
+
+					span {
+						position: absolute;
+						background: rgba(0,0,0,0.5);
+						color: #fff;
+						top: 30px; left: 10px;
+						font-size: 12px;
+						padding: 3px 5px;
+					}
+				}
+
+				&:after {
+					content: "";
+					display: block;
+					height: 50px;
+					clear: both;
+				}
+			}
+
+			&.pagination {
+				height: 50px;
+
+				li {
+					display: inline-block;
+					width: 30px;
+
+					&.active {
+						a {
+							text-decoration: none;
+							font-weight: bold;
+							color: grey;
+						}
+					}
+				}
+			}
+		}
+	}
+}

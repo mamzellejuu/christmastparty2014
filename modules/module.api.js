@@ -42,9 +42,17 @@ module.exports = function(app, io){
 		 * 		]
 		 * }
 		*/
-		app.get('/api/medias/list', function(req, res){
+		app.get('/api/medias/list/:limit?', function(req, res){
+			/**
+			 * Limit params default 100
+			*/
+			var limit = req.params.limit || null;
+			if(!limit){
+				limit = 100;
+			}
+
 			/* Load last 100 medias */
-			Cloud.list({limit: 100, order: '-createAt'}, function(response){
+			Cloud.list({limit: limit, order: '-createAt'}, function(response){
 				res.status(200).json(response);
 			});
 		});
@@ -95,6 +103,9 @@ module.exports = function(app, io){
 		app.post('/api/medias/delete', function(req, res){
 			var mediaID = req.body.id;
 			Cloud.del(mediaID, function(response){
+				/* Trigger Event Socket */
+				io.sockets.emit('del media', {});
+				/* return response to http resquest */
 				res.status(200).send(response);
 			});
 		});

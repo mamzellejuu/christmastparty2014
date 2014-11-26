@@ -10,12 +10,10 @@
 	/**
 	 * @desc Ctrl
 	*/
-	ctrl.push(function($scope, $log) {
-		
-	});
+	ctrl.push(function($scope, $log){});
 
 	/**
 	 * @desc
 	*/
-    NCP.app.GridCtrl = ctrl;
+    NCP.app.UploadCtrl = ctrl;
 })(angular, NCP);

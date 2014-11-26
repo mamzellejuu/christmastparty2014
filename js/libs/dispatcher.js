@@ -32,7 +32,7 @@ $.extend(Dispatcher.prototype, {
 	},
 		
 	run: function(){
-	 if(this.timeout){
+	 	if(this.timeout){
 			window.clearTimeout();
 			this.timeout = null;
 		}
@@ -86,5 +86,16 @@ $.extend(Dispatcher.prototype, {
 	setExcluded: function(elements){
 		this.excluded = elements;
 		return this;
+	},
+
+	destroy: function(){
+		if(this.timeout){
+			window.clearTimeout();
+			this.timeout = null;
+		}
+
+		delete this;
+
+		return null;
 	}
 });

@@ -45,10 +45,31 @@ body section {
   position: relative;
 }
 body section#one .btn {
-  top: 170px;
+  top: 0px;
 }
 body section#one #fileUploader input {
   display: none;
+}
+body section#one form {
+  position: relative;
+  top: 170px;
+}
+body section#one form .layout {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 170px;
+  left: 0;
+  z-index: 20;
+}
+body section#one form.bling {
+  -webkit-animation-name: blinker;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-duration: 0.7s;
+}
+body section#one form.bling .layout {
+  display: block;
 }
 body section#dos {
   display: none;
@@ -156,20 +177,35 @@ body section#trio .animate-success #replay:active img {
   -webkit-transform: scale(1, 1);
   opacity: 1!important;
 }
+@-webkit-keyframes blinker {
+  from {
+    opacity: 1.0;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+.multi-file-upload .item {
+  width: 150px;
+  position: relative;
+}
+.multi-file-upload .item canvas {
+  position: absolute;
+  opacity: 0;
+}
 body.main-grid {
-  background: #000;
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 body.main-grid .grid-loader {
-  background: #000;
   width: 100%;
   height: 100%;
   position: absolute;
   -webkit-backface-visibility: hidden;
   display: none;
+  z-index: 300;
 }
 body.main-grid .grid-loader img {
   width: 30px;
@@ -177,8 +213,8 @@ body.main-grid .grid-loader img {
   -webkit-animation: rotate 0.8s linear infinite;
   outline: 1px solid transparent;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  left: 30px;
+  top: 30px;
   margin-top: -15px;
   margin-left: -15px;
 }
@@ -186,19 +222,28 @@ body.main-grid .grid-wrapper {
   height: 1080px;
   width: 1920px;
   position: absolute;
+  left: 15px;
+  top: 15px;
 }
 body.main-grid .grid-wrapper * {
   box-sizing: border-box;
 }
+body.main-grid .grid-wrapper.loading .grid-loader {
+  display: block;
+}
+body.main-grid .grid-wrapper.loading .grid-container {
+  opacity: 0;
+}
 body.main-grid .grid-wrapper .item,
 body.main-grid .grid-wrapper .spacer {
   width: 162.1px;
-  height: 150.16666667px;
+  height: 162.1px;
   overflow: hidden;
   position: absolute;
   left: 0;
   top: 0;
   margin-bottom: 30px;
+  color: #fff;
   /* Settings for normal frame */
 }
 body.main-grid .grid-wrapper .item.spacer,
@@ -211,12 +256,12 @@ body.main-grid .grid-wrapper .spacer.spacer {
 body.main-grid .grid-wrapper .item.spacer + .spacer,
 body.main-grid .grid-wrapper .spacer.spacer + .spacer {
   left: 384.2px;
-  top: 540.5px;
+  top: 576.3px;
 }
 body.main-grid .grid-wrapper .item.spacer + .spacer + .spacer,
 body.main-grid .grid-wrapper .spacer.spacer + .spacer + .spacer {
   left: 1536.8px;
-  top: 540.5px;
+  top: 576.3px;
 }
 body.main-grid .grid-wrapper .item .wrapper,
 body.main-grid .grid-wrapper .spacer .wrapper {
@@ -239,8 +284,9 @@ body.main-grid .grid-wrapper .spacer .wrapper span {
 body.main-grid .grid-wrapper .item .wrapper span.frame-border,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame-border {
   z-index: 10;
-  border-style: solid;
-  border-color: #FFEB57;
+  background: url(../img/frame.png) left top no-repeat;
+  background-size: cover;
+  border: 1px solid transparent;
 }
 body.main-grid .grid-wrapper .item .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame {
@@ -252,50 +298,50 @@ body.main-grid .grid-wrapper .spacer .wrapper span.frame.main-frame {
 }
 body.main-grid .grid-wrapper .item .wrapper span.frame-border,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame-border {
-  border-width: 10px;
+  border-width: 0;
 }
 body.main-grid .grid-wrapper .item .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame {
-  width: 142.1px;
-  height: 130.16666667px;
-  left: 10px;
-  top: 10px;
+  width: 122.1px;
+  height: 122.1px;
+  left: 20px;
+  top: 20px;
 }
 body.main-grid .grid-wrapper .item.medium,
 body.main-grid .grid-wrapper .spacer.medium {
   width: 354.2px;
-  height: 330.33333333px;
+  height: 354.2px;
   left: 200px;
   /* Settings for medium frame */
 }
 body.main-grid .grid-wrapper .item.medium .wrapper span.frame-border,
 body.main-grid .grid-wrapper .spacer.medium .wrapper span.frame-border {
-  border-width: 20px;
+  border-width: 0;
 }
 body.main-grid .grid-wrapper .item.medium .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer.medium .wrapper span.frame {
-  width: 314.2px;
-  height: 290.33333333px;
-  left: 20px;
-  top: 20px;
+  width: 264.2px;
+  height: 264.2px;
+  left: 45px;
+  top: 45px;
 }
 body.main-grid .grid-wrapper .item.large,
 body.main-grid .grid-wrapper .spacer.large {
   width: 546.3px;
-  height: 510.5px;
+  height: 546.3px;
   top: 400px;
   /* Settings for large frame */
 }
 body.main-grid .grid-wrapper .item.large .wrapper span.frame-border,
 body.main-grid .grid-wrapper .spacer.large .wrapper span.frame-border {
-  border-width: 40px;
+  border-width: 0;
 }
 body.main-grid .grid-wrapper .item.large .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer.large .wrapper span.frame {
-  width: 466.3px;
-  height: 430.5px;
-  left: 40px;
-  top: 40px;
+  width: 386.3px;
+  height: 386.3px;
+  left: 80px;
+  top: 80px;
 }
 @-webkit-keyframes rotate {
   from {
@@ -304,4 +350,66 @@ body.main-grid .grid-wrapper .spacer.large .wrapper span.frame {
   to {
     -webkit-transform: rotate(360deg);
   }
+}
+.main-list {
+  background: none;
+}
+body.main-list {
+  background: #000;
+  position: relative;
+}
+body.main-list ul {
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+}
+body.main-list ul li {
+  list-style: none;
+  text-align: left;
+}
+body.main-list ul li a {
+  color: #fff;
+}
+body.main-list ul.listing li {
+  float: left;
+  width: 120px;
+  position: relative;
+}
+body.main-list ul.listing li img {
+  width: 100px;
+  height: 100px;
+  margin: 25px auto 5px auto;
+  display: block;
+  border: 5px solid #fff;
+}
+body.main-list ul.listing li a {
+  display: block;
+  text-align: center;
+}
+body.main-list ul.listing li span {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  top: 30px;
+  left: 10px;
+  font-size: 12px;
+  padding: 3px 5px;
+}
+body.main-list ul.listing:after {
+  content: "";
+  display: block;
+  height: 50px;
+  clear: both;
+}
+body.main-list ul.pagination {
+  height: 50px;
+}
+body.main-list ul.pagination li {
+  display: inline-block;
+  width: 30px;
+}
+body.main-list ul.pagination li.active a {
+  text-decoration: none;
+  font-weight: bold;
+  color: grey;
 }

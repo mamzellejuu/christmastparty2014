@@ -38,6 +38,7 @@ module.exports = function (grunt) {
                     'js/libs/isotope.pkgd.min.js',
                     'js/libs/grid.js',
                     'js/libs/dispatcher.js',
+                    'js/libs/file.upload.manager.js',
                     'js/vendors/angular.js',
                     'js/vendors/modules/angular-animate.js',
                     'js/vendors/modules/angular-route.js',
@@ -46,6 +47,7 @@ module.exports = function (grunt) {
                     'js/vendors/modules/angular-translate.js',
                     'js/vendors/modules/angular-translate-loader-static-files.js',
                     'js/vendors/modules/i18n/*.js',
+                    'js/vendors/modules/angularUtils.directives.dirPagination.js'
                 ],
                 dest: 'public/js/vendors.js'
             },

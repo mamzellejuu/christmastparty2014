@@ -1,1 +1,16 @@
-yepyep
+<div ncp-multi-file-upload class="multi-file-upload">
+	<form name="fileUploader" id="fileUploader">
+	    <input type="file" multiple="multiple" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
+	    <a href="#" ng-click="upload()">Uploader</a>
+	</form>
+
+	<div class="preview">
+		<div data-ng-repeat="item in items" class="item" data-index="{{ $index }}">
+			<div class="wrapper">
+				<img ng-src="{{ item.url }}" width="120" />
+				<canvas width="280" height="280"></canvas>
+			</div>
+		</div>
+	</div>
+</div>
+

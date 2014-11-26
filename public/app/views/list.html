@@ -1,1 +1,10 @@
-Liste des images...
+<!-- first pagination instance -->
+<ul class="listing">
+    <li dir-paginate="media in data | itemsPerPage: 30: 'listing'" pagination-id="listing">
+    	<img ng-src="{{ media.file.url }}" />
+    	<span>{{ media.objectId }}</span>
+    	<a href="#" ng-click="delete(media.objectId)">Supprimer</a>
+    </li>
+</ul>
+
+<dir-pagination-controls pagination-id="listing"></dir-pagination-controls>
