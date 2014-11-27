@@ -1,7 +1,7 @@
 (function(ng, NCP){
 	/***/
 	var Grid = (function(){
-		var n = 17
+		var n = 20
 		  , m = 5
 		  , l = 3
 		  , limit = n + m + l;
