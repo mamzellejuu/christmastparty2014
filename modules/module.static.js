@@ -1,4 +1,16 @@
 module.exports = function(app, urls){
+	/**/
+	var credentials = {
+		login: 'nous',
+		password: 'nowel2014'
+	};
+
+	/**
+	 * Authentification for secure page access
+	*/
+	var express = require('express')
+	  , auth = express.basicAuth(credentials.login, credentials.password);
+
     /* Run Angular application with load index.html */
     function getApplication(req, res){
         res.setHeader('Content-Type', 'text/html');
@@ -7,10 +19,18 @@ module.exports = function(app, urls){
     }
 
     /* Run Angular application for all urls */
-	var angular = function(urls){
-		for(var i = 0, l = urls.length; i < l; i++){
-			var uri = urls[i];
-			app.get(uri, getApplication);
+	var angular = function(routes){
+		for(var i = 0, l = routes.length; i < l; i++){
+			var route = routes[i]
+			  , secure = route.secure
+			  , url = route.url
+			  , params = [url, getApplication];
+
+			  if(secure){
+			  	params.splice(1,0, auth);
+			  }
+
+			app.get.apply(app, params);
 		}
 
 		return true;

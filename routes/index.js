@@ -4,7 +4,13 @@ module.exports = function(app, ioSocket){
 	/*-----------------------------
 	  Run Static Angular App.
 	-----------------------------*/
-	var urls = ['/', '/grid', '/list', '/upload'];
+	var urls = [
+		{url: '/', secure: false},
+		{url: '/grid', secure: false}, 
+		{url: '/list', secure: true}, 
+		{url: '/upload', secure: true}
+	];
+	
 	require(modulePath + '/module.static.js')(app, urls);
 
 	/*-------------------

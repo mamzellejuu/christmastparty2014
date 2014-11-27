@@ -1,4 +1,106 @@
 /**
+ * Base Class for uploading file with canvas resizing
+*/
+var FileUploadViewer = function($container, options){
+	this.options = $.extend({}, {
+		size: 280,
+		url: null
+	}, options);
+
+	this.container = $container;
+	this.canvas = $('canvas', this.container)[0] || null;
+	this.ctx = (this.canvas)? this.canvas.getContext('2d') : null;
+	this.data = null;
+
+	return this.init();
+};
+
+$.extend(FileUploadViewer.prototype, {
+	init: function(){
+		if(this.canvas){
+			var size = parseInt(this.canvas.width);
+			if(size){
+				this.options.size = size;
+			}
+		}
+
+		return this;
+	},
+
+	getData: function(){
+		var data = this.data || null;
+		if(!data && this.canvas){
+			data = this.canvas.toDataURL();
+		}
+
+		return data;
+	},
+
+	preview: function(img){
+		var settings = this.getPreviewSettings(img.width, img.height)
+		  , left = settings.targetLeft
+		  , top = settings.targetTop
+		  , width = settings.width
+		  , height = settings.height
+		  , size = width
+		  , ctx = this.ctx;
+
+		/* Rotate */
+		ctx.drawImage(img, left, top, width, height);
+		/* Set data */
+		this.data = this.canvas.toDataURL();
+		/* Event */
+		$(this).trigger('previewFileUpload', [this]);
+
+		return this;
+	},
+
+	getPreviewSettings: function(srcWidth, srcHeight){
+		var targetWidth = this.options.size
+		  , targetHeight = this.options.size
+		  , width = targetWidth
+		  , height = targetHeight;
+
+	    /* Scale to the target width */
+	    var scaleX1 = targetWidth
+	      , scaleY1 = (srcHeight * targetWidth)/srcWidth;
+
+	    /* Scale to the target height */
+	    var scaleX2 = (srcWidth * targetHeight)/srcHeight
+	      , scaleY2 = targetHeight;
+
+		/* Now figure out which one we should use */
+		if(scaleX2 > targetWidth){
+			/* Landscape image */
+			width = Math.floor(scaleX2);
+	    } else {
+	    	height = Math.floor(scaleY1);
+	    }
+
+	    var result = {
+			width: width,
+			height: height,
+			targetLeft: Math.floor((targetWidth - width)/2),
+			targetTop: Math.floor((targetHeight - height)/2)
+		};
+
+		return result;
+	},
+
+	reset: function(){
+		/* Clear canvas */
+		var ctx = this.ctx
+		  , size = this.options.size;
+		ctx.clearRect (0, 0, size, size);
+
+		return this;
+	}
+});
+
+
+
+
+/**
  * File Uploader Manager Class
 */
 var FileUploadManager = function(container, opts){
@@ -156,98 +258,3 @@ $.extend(FileUploadManager.prototype, {
 });
 
 
-var FileUploadViewer = function($container, options){
-	this.options = $.extend({}, {
-		size: 280,
-		url: null
-	}, options);
-
-	this.container = $container;
-	this.canvas = $('canvas', this.container)[0] || null;
-	this.ctx = (this.canvas)? this.canvas.getContext('2d') : null;
-	this.data = null;
-
-	return this.init();
-};
-
-$.extend(FileUploadViewer.prototype, {
-	init: function(){
-		if(this.canvas){
-			var size = parseInt(this.canvas.width);
-			if(size){
-				this.options.size = size;
-			}
-		}
-
-		return this;
-	},
-
-	getData: function(){
-		var data = this.data || null;
-		if(!data && this.canvas){
-			data = this.canvas.toDataURL();
-		}
-
-		return data;
-	},
-
-	preview: function(img){
-		var settings = this.getPreviewSettings(img.width, img.height)
-		  , left = settings.targetLeft
-		  , top = settings.targetTop
-		  , width = settings.width
-		  , height = settings.height
-		  , size = width
-		  , ctx = this.ctx;
-
-		/* Rotate */
-		ctx.drawImage(img, left, top, width, height);
-		/* Set data */
-		this.data = this.canvas.toDataURL();
-		/* Event */
-		$(this).trigger('previewFileUpload', [this]);
-
-		return this;
-	},
-
-	getPreviewSettings: function(srcWidth, srcHeight){
-		var targetWidth = this.options.size
-		  , targetHeight = this.options.size
-		  , width = targetWidth
-		  , height = targetHeight;
-
-	    /* Scale to the target width */
-	    var scaleX1 = targetWidth
-	      , scaleY1 = (srcHeight * targetWidth)/srcWidth;
-
-	    /* Scale to the target height */
-	    var scaleX2 = (srcWidth * targetHeight)/srcHeight
-	      , scaleY2 = targetHeight;
-
-		/* Now figure out which one we should use */
-		if(scaleX2 > targetWidth){
-			/* Landscape image */
-			width = Math.floor(scaleX2);
-	    } else {
-	    	height = Math.floor(scaleY1);
-	    }
-
-	    var result = {
-			width: width,
-			height: height,
-			targetLeft: Math.floor((targetWidth - width)/2),
-			targetTop: Math.floor((targetHeight - height)/2)
-		};
-
-		return result;
-	},
-
-	reset: function(){
-		/* Clear canvas */
-		var ctx = this.ctx
-		  , size = this.options.size;
-		ctx.clearRect (0, 0, size, size);
-
-		return this;
-	}
-});
