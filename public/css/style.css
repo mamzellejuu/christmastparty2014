@@ -194,12 +194,14 @@ body section#trio .animate-success #replay:active img {
   opacity: 0;
 }
 body.main-grid {
+  background: #000;
   position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
 body.main-grid .grid-loader {
+  background: #000;
   width: 100%;
   height: 100%;
   position: absolute;

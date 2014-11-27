@@ -522,14 +522,6 @@ NCP.app.config([
 				}
 
 				elem.addClass(name);
-
-				/* Remove title bar */
-				$(window).bind('load', function(){
-					if(!load){
-						window.scrollTo(0,1);
-						load = true;
-					}
-				});
 			}
 		}
 	});
