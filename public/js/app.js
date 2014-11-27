@@ -310,7 +310,7 @@ NCP.app.config([
 
 
 					/* Instance of FileUploadManager Class */
-					fileUploadManager = new FileUploadManager(elem, {});
+					fileUploadManager = new FileUploadManager(elem, {}).init();
 
 					/* On preview */
 					$(fileUploadManager).bind('previewFileUpload', function(){
@@ -588,7 +588,7 @@ NCP.app.config([
 
 					if(l){
 						var url = t[i].url
-						  , fileViewer = new FileUploadViewer($item, {url: url})
+						  , fileViewer = new FileUploadViewer($item, {url: url}).init()
 						  , img = $('img', $item)[0];
 
 						$(fileViewer).bind('previewFileUpload', function(){

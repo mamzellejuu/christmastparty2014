@@ -63,7 +63,7 @@
 
 
 					/* Instance of FileUploadManager Class */
-					fileUploadManager = new FileUploadManager(elem, {});
+					fileUploadManager = new FileUploadManager(elem, {}).init();
 
 					/* On preview */
 					$(fileUploadManager).bind('previewFileUpload', function(){

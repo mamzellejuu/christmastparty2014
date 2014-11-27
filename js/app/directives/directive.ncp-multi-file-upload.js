@@ -52,7 +52,7 @@
 
 					if(l){
 						var url = t[i].url
-						  , fileViewer = new FileUploadViewer($item, {url: url})
+						  , fileViewer = new FileUploadViewer($item, {url: url}).init()
 						  , img = $('img', $item)[0];
 
 						$(fileViewer).bind('previewFileUpload', function(){
