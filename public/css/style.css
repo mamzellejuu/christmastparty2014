@@ -77,19 +77,21 @@ body section#dos {
 }
 body section#dos #rotate {
   position: relative;
-  top: -83px;
+  top: -100px;
+  left: 4px;
   z-index: 50;
 }
 body section#dos #rotate img {
-  width: 50px;
+  width: 85px;
   opacity: 0.7;
 }
 body section#dos #cancel {
   position: absolute;
   top: 375px;
+  margin-left: -115px;
 }
 body section#dos #cancel img {
-  width: 50px;
+  width: 53px;
   transition: all 700ms ease;
 }
 body section#dos #cancel:hover img {
@@ -108,7 +110,7 @@ body section#dos .frame .btn {
   position: absolute;
   z-index: 999;
   top: 289px;
-  left: 58px;
+  left: 165px;
 }
 body section#dos .frame .btn img {
   width: 64px;
