@@ -5,6 +5,7 @@ html, body{
 	background-size: cover;
 	background-repeat: no-repeat;
     background-attachment: fixed;
+    min-height: 460px;
 }
 
 body{
@@ -72,26 +73,42 @@ body{
 			display: none;
 			#rotate{
 				position: relative;
-				top: 100px;
+				top: -83px;
+				z-index: 50;
 				img{
 					width: 50px;
+					opacity: 0.7;
+				}
+			}
+			#cancel {
+				img {
+					width: 50px;
+					transition: all 700ms ease;
+				}
+				position: absolute;
+				top: 375px;
+
+				&:hover{
+					img{
+						transform:rotate(360deg);
+						-webkit-transform:rotate(360deg);
+					}
 				}
 			}
 			.frame{
-
 				width: 280px;
 				margin: 0 auto;
 				text-align: center;
 				position: relative;
 				top: 80px;
+				z-index: 10;
 				.btn{
 					position: absolute;
 					z-index: 999;
-					top: 90px;
-					left: 90px;
+					top: 289px;
+					left: 58px;
 					img{
-						width: 100px;
-						opacity: .6;
+						width: 64px;
 					}
 				}
 				#frameimg{
@@ -194,4 +211,12 @@ body{
 @-webkit-keyframes blinker {  
   from { opacity: 1.0; }
   to { opacity: 0.5; }
+}
+
+@media only screen and (orientation: landscape) {
+	body {
+		#logo{
+			position: absolute;
+		}
+	}
 }

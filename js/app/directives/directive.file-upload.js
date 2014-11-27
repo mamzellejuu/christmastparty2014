@@ -38,8 +38,8 @@
 				fileUploadManager.reset();
 			};
 
-			$scope.restart = function(){
-				$scope.$emit('restart');
+			$scope.restart = function(force){
+				$scope.$emit('restart', [force]);
 			};
 
 			$scope.rotation = function(){
@@ -96,12 +96,16 @@
 						$dos.animate({opacity: 0.3});
 					});
 
-					$scope.$on('restart', function(){
-						$okLarge.removeClass('active');
-						$replayImg.removeClass('active');
-						$one.fadeIn();
-						$trio.fadeOut();
-						$dos.css({opacity: 1});
+					$scope.$on('restart', function(evt, params){
+						if(params){
+							window.location.reload();
+						} else {
+							$okLarge.removeClass('active');
+							$replayImg.removeClass('active');
+							$one.fadeIn();
+							$trio.fadeOut();
+							$dos.css({opacity: 1});
+						}
 					});
 				}
 			}

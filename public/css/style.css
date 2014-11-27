@@ -18,6 +18,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  min-height: 460px;
 }
 body {
   margin: 0;
@@ -76,10 +77,24 @@ body section#dos {
 }
 body section#dos #rotate {
   position: relative;
-  top: 100px;
+  top: -83px;
+  z-index: 50;
 }
 body section#dos #rotate img {
   width: 50px;
+  opacity: 0.7;
+}
+body section#dos #cancel {
+  position: absolute;
+  top: 375px;
+}
+body section#dos #cancel img {
+  width: 50px;
+  transition: all 700ms ease;
+}
+body section#dos #cancel:hover img {
+  transform: rotate(360deg);
+  -webkit-transform: rotate(360deg);
 }
 body section#dos .frame {
   width: 280px;
@@ -87,16 +102,16 @@ body section#dos .frame {
   text-align: center;
   position: relative;
   top: 80px;
+  z-index: 10;
 }
 body section#dos .frame .btn {
   position: absolute;
   z-index: 999;
-  top: 90px;
-  left: 90px;
+  top: 289px;
+  left: 58px;
 }
 body section#dos .frame .btn img {
-  width: 100px;
-  opacity: .6;
+  width: 64px;
 }
 body section#dos .frame #frameimg {
   max-width: 100%;
@@ -183,6 +198,11 @@ body section#trio .animate-success #replay:active img {
   }
   to {
     opacity: 0.5;
+  }
+}
+@media only screen and (orientation: landscape) {
+  body #logo {
+    position: absolute;
   }
 }
 .multi-file-upload .item {

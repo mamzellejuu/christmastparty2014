@@ -9519,6 +9519,9 @@ $.extend(Dispatcher.prototype, {
 });
 /**
  * Base Class for uploading file with canvas resizing
+ * @param {Object} $container HTML container
+ * @param {Object} Options Hash object options
+ * Return {Object} Instance of FileUploadViewer Class
 */
 var FileUploadViewer = function($container, options){
 	this.options = $.extend({}, {
@@ -9536,7 +9539,14 @@ var FileUploadViewer = function($container, options){
 	return this;
 };
 
+/**
+ * @desc prototype methods
+*/
 $.extend(FileUploadViewer.prototype, {
+	/**
+	 * Initialize object instance
+	 * @return {Object} Instance of FileUploadViewer Class
+	*/
 	init: function(){
 		if(this.canvas){
 			var size = parseInt(this.canvas.width);
@@ -9548,6 +9558,10 @@ $.extend(FileUploadViewer.prototype, {
 		return this;
 	},
 
+	/**
+	 * Return data URL image base64 encoded
+	 * @return {String} URL image base64 encoded
+	*/
 	getData: function(){
 		var data = this.data || null;
 		if(!data && this.canvas){
@@ -9557,6 +9571,11 @@ $.extend(FileUploadViewer.prototype, {
 		return data;
 	},
 
+	/**
+	 * Preview the image resizing in an HTML canvas
+	 * @param {Object} img HTML DOM Image element
+	 * @return {Object} Instance of FileUploadViewer Class
+	*/
 	preview: function(img){
 		var settings = this.getPreviewSettings(img.width, img.height)
 		  , left = settings.targetLeft
@@ -9576,6 +9595,12 @@ $.extend(FileUploadViewer.prototype, {
 		return this;
 	},
 
+	/**
+	 * Return the preview setting for image position in canvas element
+	 * @param {Integer} srcWidth width image source
+	 * @param {Integer} srcHeight height image source
+	 * @return {Object} list of settings for preview action
+	*/
 	getPreviewSettings: function(srcWidth, srcHeight){
 		var targetWidth = this.options.size
 		  , targetHeight = this.options.size
@@ -9608,6 +9633,10 @@ $.extend(FileUploadViewer.prototype, {
 		return result;
 	},
 
+	/**
+	 * Clear the object
+	 * @return {Object} Instance of FileUploadViewer Class
+	*/
 	reset: function(){
 		/* Clear canvas */
 		var ctx = this.ctx
@@ -9699,9 +9728,6 @@ $.extend(FileUploadManager.prototype, {
 		return this;
 	}
 });
-
-console.log(FileUploadViewer);
-console.log(FileUploadManager);
 /**
  * @license AngularJS v1.3.2
  * (c) 2010-2014 Google, Inc. http://angularjs.org
