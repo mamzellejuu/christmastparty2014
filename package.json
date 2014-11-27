@@ -7,7 +7,8 @@
     "express": "~3.4.8",
     "nconf": "~0.6.9",
     "underscore": "~1.6.0",
-    "kaiseki": "*"
+    "kaiseki": "*",
+    "socket.io": "~1.2.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -22,8 +23,7 @@
     "grunt-contrib-watch": "~0.5.3",
     "grunt-exec": "~0.4.5",
     "grunt-replace": "^0.7.9",
-    "grunt-shell-spawn": "~0.3.0",
-    "socket.io": "~1.2.0"
+    "grunt-shell-spawn": "~0.3.0"
   },
   "main": "app.js",
   "scripts": {},
