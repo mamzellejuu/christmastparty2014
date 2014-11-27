@@ -145,7 +145,7 @@ NCP.app.config([
 (function(ng, NCP){
 	/***/
 	var Grid = (function(){
-		var n = 17
+		var n = 20
 		  , m = 5
 		  , l = 3
 		  , limit = n + m + l;
@@ -443,9 +443,15 @@ NCP.app.config([
 							interval = null;
 						}
 
+						/* Run interval random Grid */
 						interval = window.setInterval(function(){
 							elem.isotope('shuffle');
 						}, delay);
+
+						/* Shuffle the grid @t loading */
+						$timeout(function(){
+							elem.isotope('shuffle');
+						}, 100, false);
 
 						if(grid.length()){
 							var options = {
