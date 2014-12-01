@@ -77,26 +77,21 @@ body section#dos {
 }
 body section#dos #rotate {
   position: relative;
-  top: -100px;
   left: 4px;
   z-index: 50;
+  top: 101px;
 }
 body section#dos #rotate img {
-  width: 85px;
-  opacity: 0.7;
+  width: 53px;
 }
 body section#dos #cancel {
   position: absolute;
   top: 375px;
-  margin-left: -115px;
+  margin-left: -133px;
 }
 body section#dos #cancel img {
   width: 53px;
   transition: all 700ms ease;
-}
-body section#dos #cancel:hover img {
-  transform: rotate(360deg);
-  -webkit-transform: rotate(360deg);
 }
 body section#dos .frame {
   width: 280px;
@@ -109,11 +104,11 @@ body section#dos .frame {
 body section#dos .frame .btn {
   position: absolute;
   z-index: 999;
-  top: 289px;
-  left: 165px;
+  top: 296px;
+  left: 202px;
 }
 body section#dos .frame .btn img {
-  width: 64px;
+  width: 53px;
 }
 body section#dos .frame #frameimg {
   max-width: 100%;
