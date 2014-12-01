@@ -309,7 +309,7 @@ body.main-grid .grid-wrapper .item .wrapper span.frame-border,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame-border {
   z-index: 10;
   background: url(../img/frame.png) left top no-repeat;
-  background-size: cover;
+  background-size: contain;
   border: 1px solid transparent;
 }
 body.main-grid .grid-wrapper .item .wrapper span.frame,
@@ -326,10 +326,22 @@ body.main-grid .grid-wrapper .spacer .wrapper span.frame-border {
 }
 body.main-grid .grid-wrapper .item .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer .wrapper span.frame {
-  width: 122.1px;
-  height: 122.1px;
-  left: 20px;
-  top: 20px;
+  width: 136.1px;
+  height: 136.1px;
+  left: 13px;
+  top: 13px;
+}
+body.main-grid .grid-wrapper .item.small_a .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.small_a .wrapper span.frame-border {
+  background-image: url(../img/small-a.png);
+}
+body.main-grid .grid-wrapper .item.small_b .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.small_b .wrapper span.frame-border {
+  background-image: url(../img/small-b.png);
+}
+body.main-grid .grid-wrapper .item.small_c .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.small_c .wrapper span.frame-border {
+  background-image: url(../img/small-c.png);
 }
 body.main-grid .grid-wrapper .item.medium,
 body.main-grid .grid-wrapper .spacer.medium {
@@ -344,10 +356,33 @@ body.main-grid .grid-wrapper .spacer.medium .wrapper span.frame-border {
 }
 body.main-grid .grid-wrapper .item.medium .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer.medium .wrapper span.frame {
-  width: 264.2px;
-  height: 264.2px;
-  left: 45px;
-  top: 45px;
+  width: 304.2px;
+  height: 304.2px;
+  left: 25px;
+  top: 25px;
+}
+body.main-grid .grid-wrapper .item.medium.medium_a .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.medium.medium_a .wrapper span.frame-border {
+  background-image: url(../img/medium-a.png);
+}
+body.main-grid .grid-wrapper .item.medium.medium_a .wrapper span.frame,
+body.main-grid .grid-wrapper .spacer.medium.medium_a .wrapper span.frame {
+  top: 10px;
+}
+body.main-grid .grid-wrapper .item.medium.medium_b .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.medium.medium_b .wrapper span.frame-border {
+  background-image: url(../img/medium-b.png);
+}
+body.main-grid .grid-wrapper .item.medium.medium_c .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.medium.medium_c .wrapper span.frame-border {
+  background-image: url(../img/medium-c.png);
+}
+body.main-grid .grid-wrapper .item.medium.medium_c .wrapper span.frame,
+body.main-grid .grid-wrapper .spacer.medium.medium_c .wrapper span.frame {
+  width: 312px;
+  height: 312px;
+  left: 20px;
+  top: 15px;
 }
 body.main-grid .grid-wrapper .item.large,
 body.main-grid .grid-wrapper .spacer.large {
@@ -362,10 +397,25 @@ body.main-grid .grid-wrapper .spacer.large .wrapper span.frame-border {
 }
 body.main-grid .grid-wrapper .item.large .wrapper span.frame,
 body.main-grid .grid-wrapper .spacer.large .wrapper span.frame {
-  width: 386.3px;
-  height: 386.3px;
-  left: 80px;
-  top: 80px;
+  width: 446.3px;
+  height: 446.3px;
+  left: 50px;
+  top: 50px;
+}
+body.main-grid .grid-wrapper .item.large.large_a .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.large.large_a .wrapper span.frame-border {
+  background-image: url(../img/large-a.png);
+}
+body.main-grid .grid-wrapper .item.large.large_a .wrapper span.frame,
+body.main-grid .grid-wrapper .spacer.large.large_a .wrapper span.frame {
+  width: 498px;
+  height: 498px;
+  left: 20px;
+  top: 15px;
+}
+body.main-grid .grid-wrapper .item.large.large_b .wrapper span.frame-border,
+body.main-grid .grid-wrapper .spacer.large.large_b .wrapper span.frame-border {
+  background-image: url(../img/large-b.png);
 }
 @-webkit-keyframes rotate {
   from {

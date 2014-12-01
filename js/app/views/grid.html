@@ -4,7 +4,7 @@
 	</div>
 
 	<div class="grid-container" ncp-medias-grid="grid-frames-ready" ng-model="data.items">
-		<div ng-repeat="item in data.structure.normal.data" data-url="{{ item.url }}" class="item" id="grid-frame-normal-{{ $index }}">
+		<div ng-repeat="item in data.structure.normal.data" ng-class="{small_a: ($index%3==0), small_b: ($index%3==1), small_c: ($index%3==2)}" data-url="{{ item.url }}" class="item" id="grid-frame-normal-{{ $index }}">
 			<span class="wrapper">
 				<span class="frame-border"></span>
 				<span class="frame transition-frame"></span>
@@ -12,7 +12,7 @@
 			</span>
 		</div>
 
-		<div ng-repeat="item in data.structure.medium.data" data-url="{{ item.url }}" class="item medium" id="grid-frame-medium-{{ $index }}">
+		<div ng-repeat="item in data.structure.medium.data" ng-class="{medium_a: ($index%3==0), medium_b: ($index%3==1), medium_c: ($index%3==2)}" data-url="{{ item.url }}" data-url="{{ item.url }}" class="item medium" id="grid-frame-medium-{{ $index }}">
 			<span class="wrapper">
 				<span class="frame-border"></span>
 				<span class="frame transition-frame"></span>
@@ -20,7 +20,7 @@
 			</span>
 		</div>
 
-		<div ng-repeat="item in data.structure.large.data" data-url="{{ item.url }}" class="item large" id="grid-frame-large-{{ $index }}" ncp-repeat-last="grid-frames-ready">
+		<div ng-repeat="item in data.structure.large.data" ng-class="{large_a: ($index%2==0), large_b: ($index%2==1)}" data-url="{{ item.url }}" class="item large" id="grid-frame-large-{{ $index }}" ncp-repeat-last="grid-frames-ready">
 			<span class="wrapper">
 				<span class="frame-border"></span>
 				<span class="frame transition-frame"></span>

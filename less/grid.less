@@ -123,7 +123,7 @@ body {
 						&.frame-border {
 							z-index: 10;
 							background: url(../img/frame.png) left top no-repeat;
-							background-size: cover;
+							background-size: contain;
 							border: 1px solid transparent;
 						}
 
@@ -137,7 +137,37 @@ body {
 				}
 
 				/* Settings for normal frame */
-				.set-frame(@grid-item-normal-width, @grid-item-normal-height, 20px);
+				.set-frame(@grid-item-normal-width, @grid-item-normal-height, 13px);
+
+				&.small_a {
+					.wrapper {
+						span {
+							&.frame-border {
+								background-image: url(../img/small-a.png);
+							}
+						}
+					}
+				}
+
+				&.small_b {
+					.wrapper {
+						span {
+							&.frame-border {
+								background-image: url(../img/small-b.png);
+							}
+						}
+					}
+				}
+
+				&.small_c {
+					.wrapper {
+						span {
+							&.frame-border {
+								background-image: url(../img/small-c.png);
+							}
+						}
+					}
+				}
 
 				&.medium {
 					width: @grid-item-medium-width;
@@ -145,7 +175,48 @@ body {
 					left: 200px;
 
 					/* Settings for medium frame */
-					.set-frame(@grid-item-medium-width, @grid-item-medium-height, 45px);
+					.set-frame(@grid-item-medium-width, @grid-item-medium-height, 25px);
+
+					&.medium_a {
+						.wrapper {
+							span {
+								&.frame-border {
+									background-image: url(../img/medium-a.png);
+								}
+
+								&.frame {
+									top: 10px;
+								}
+							}
+						}
+					}
+
+					&.medium_b {
+						.wrapper {
+							span {
+								&.frame-border {
+									background-image: url(../img/medium-b.png);
+								}
+							}
+						}
+					}
+
+					&.medium_c {
+						.wrapper {
+							span {
+								&.frame-border {
+									background-image: url(../img/medium-c.png);
+								}
+
+								&.frame {
+									width: 312px;
+									height: 312px;
+									left: 20px;
+									top: 15px;
+								}
+							}
+						}
+					}
 				}
 
 				&.large {
@@ -154,7 +225,34 @@ body {
 					top: 400px;
 
 					/* Settings for large frame */
-					.set-frame(@grid-item-large-width, @grid-item-large-height, 80px);
+					.set-frame(@grid-item-large-width, @grid-item-large-height, 50px);
+
+					&.large_a {
+						.wrapper {
+							span {
+								&.frame-border {
+									background-image: url(../img/large-a.png);
+								}
+
+								&.frame {
+									width: 498px;
+									height: 498px;
+									left: 20px;
+									top: 15px;
+								}
+							}
+						}
+					}
+
+					&.large_b {
+						.wrapper {
+							span {
+								&.frame-border {
+									background-image: url(../img/large-b.png);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
