@@ -49,7 +49,7 @@ body section#one .btn {
   top: 0px;
 }
 body section#one #fileUploader input {
-  display: none;
+  visibility: hidden;
 }
 body section#one form {
   position: relative;
