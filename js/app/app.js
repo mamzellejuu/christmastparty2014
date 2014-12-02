@@ -58,7 +58,7 @@ NCP.app.config([
         	controller: NCP.app.ListCtrl,
             resolve: {
                 Medias: ['MediasService', function(MediasService){
-                    return MediasService.get(500);
+                    return MediasService.get(5000);
                 }]
             }
         }).when('/upload',{ //Upload in batch actions

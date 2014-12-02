@@ -52,7 +52,7 @@ module.exports = function(app, io){
 			}
 
 			/* Load last 100 medias */
-			Cloud.list({limit: limit, order: '-createAt'}, function(response){
+			Cloud.list({limit: limit, order: '-createdAt'}, function(response){
 				res.status(200).json(response);
 			});
 		});

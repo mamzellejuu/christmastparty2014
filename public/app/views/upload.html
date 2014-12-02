@@ -1,6 +1,8 @@
 <div ncp-multi-file-upload class="multi-file-upload">
 	<form name="fileUploader" id="fileUploader">
-	    <input type="file" multiple="multiple" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
+		<div class="fileUpload">
+			<input type="file" multiple="multiple" id="fileUpload" name="fileUpload" accept="image/*;" capture="camera" />
+	    </div>
 	    <a href="#" ng-click="upload()">Uploader</a>
 	</form>
 
@@ -9,6 +11,7 @@
 			<div class="wrapper">
 				<img ng-src="{{ item.url }}" width="120" />
 				<canvas width="280" height="280"></canvas>
+				<a class="fa fa-remove" href="#" ng-click="remove($index)">X</a>
 			</div>
 		</div>
 	</div>

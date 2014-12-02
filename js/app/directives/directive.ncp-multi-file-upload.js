@@ -22,21 +22,29 @@
 
 					for(var i = 0; i < l; i++){
 						(function(file){
-							/* File reader */
-							var reader = new FileReader();
-							/* Load */
-							reader.onload = function(event){
-								items.push({url: event.target.result});
-								j++;
+							canvasResize(file, {
+						        width: 1000,
+						        height: 1000,
+						        crop: true,
+						        quality: 99,
+						        callback: function(data, width, height) {
+						            var img = new Image();
 
-								if(j == l){
-									$timeout(function(){
-										$scope.items = items;
-									}, 0, true);
-								}
-							};
-							/* Read file */
-							reader.readAsDataURL(file);
+						            img.onload = function(){
+										items.push({url: data});
+										j++;
+
+										if(j == l){
+											$timeout(function(){
+												$scope.items = items;
+											}, 0, true);
+										}
+									};
+
+									/* Load image data */
+									img.src = data;
+						        }
+						    });
 						})(files[i]);	
 					}
 				});
@@ -86,6 +94,20 @@
 
 				$scope.upload = function(){
 					upload($scope.items);
+				};
+
+				$scope.remove = function($index){
+					var items = [];
+					for(var i = 0, l = $scope.items.length; i < l; i++){
+						if(i != $index){
+							items.push($scope.items[i]);
+						}
+					}
+
+					$timeout(function(){
+						$scope.items = items;
+					}, 0, true);
+
 				};
 
 				$(document).delegate('.item', 'click', function(e){
