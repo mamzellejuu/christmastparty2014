@@ -11167,10 +11167,10 @@ $.extend(FileUploadManager.prototype, {
 			$(self).trigger('previewStartLoad');
 
 			canvasResize(target.files[0], {
-		        width: 280,
-		        height: 280,
+		        width: 1000,
+		        height: 1000,
 		        crop: true,
-		        quality: 100,
+		        quality: 99,
 		        callback: function(data, width, height) {
 		            var img = new Image();
 
