@@ -11194,7 +11194,8 @@ $.extend(FileUploadManager.prototype, {
 		  , src = this.data
 		  , ctx = this.ctx
 		  , size = this.options.size
-		  , center = size/2;
+		  , center = size/2
+		  , self = this;
 
 		this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
 
@@ -11206,6 +11207,9 @@ $.extend(FileUploadManager.prototype, {
 				ctx.translate(center, center);
 				ctx.rotate(self.rotation*Math.PI/180);
 				ctx.drawImage(img, -1*center, -1*center, size, size);
+
+				/* Set data */
+				self.data = self.canvas.toDataURL();
 				ctx.restore();
 			};
 
