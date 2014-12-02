@@ -9,15 +9,16 @@ module.exports = function (grunt) {
                 	"js/app/*.js",
                 	"js/main.js",
                 	"js/libs/grid.js",
-                	"js/libs/dispatcher.js"
+                	"js/libs/dispatcher.js",
+                    "js/libs/file.upload.manager.js"
                 ],
-                tasks: ["concat:vendors", "concat:app", "copy:app"],
+                tasks: ["concat:vendors", "concat:app", "copy:app", "replace:development"],
                 options: {
                     nospawn: true
                 }
             },
             less: {
-                files: ["less/*.less", "less/**/*.less"],
+                files: ["less/*.less", "less/**/*.less","replace:development"],
                 tasks: ["less:development"],
                 options: {
                     nospawn: true
@@ -31,11 +32,30 @@ module.exports = function (grunt) {
                 }
             }
         },
+        replace: {
+          development: {
+            options: {
+              patterns: [{
+                  match: 'TIMESTAMP',
+                  replacement: '<%= new Date().getTime() %>'
+                }],
+              verbose: true,
+            },
+            files: [{
+              src: ['public/index.html'],
+              dest: 'public/index.html'
+            }]
+          },
+        },
         concat: {
             vendors: {
                 src: [ //libs - vendors JS
                     'js/libs/jquery-2.1.1.js',
                     'js/libs/isotope.pkgd.min.js',
+                    'js/libs/megapix-image.js',
+                    'js/libs/binaryajax.js',
+                    'js/libs/exif.js',
+                    'js/libs/canvasResize.js',
                     'js/libs/grid.js',
                     'js/libs/dispatcher.js',
                     'js/libs/file.upload.manager.js',
@@ -102,9 +122,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-replace');
 
      /* Build */
-    grunt.registerTask("dev-build", ["less:development","concat","copy:app","uglify"]);
+    grunt.registerTask("dev-build", ["less:development","concat","copy:app","uglify","replace:development"]);
     grunt.registerTask("dev-watch", ["watch"]);
     grunt.registerTask("dev", [ "dev-build", "dev-watch"]);
     grunt.registerTask("heroku:production", [ "dev-build"]);

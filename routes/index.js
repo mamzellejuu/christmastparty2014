@@ -6,7 +6,7 @@ module.exports = function(app, ioSocket){
 	-----------------------------*/
 	var urls = [
 		{url: '/', secure: false},
-		{url: '/grid', secure: false}, 
+		{url: '/grid', secure: true}, 
 		{url: '/list', secure: true}, 
 		{url: '/upload', secure: true}
 	];

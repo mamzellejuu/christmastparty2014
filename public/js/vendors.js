@@ -9197,6 +9197,1537 @@ return jQuery;
 
 (function(t){function e(){}function i(t){function i(e){e.prototype.option||(e.prototype.option=function(e){t.isPlainObject(e)&&(this.options=t.extend(!0,this.options,e))})}function n(e,i){t.fn[e]=function(n){if("string"==typeof n){for(var s=o.call(arguments,1),a=0,u=this.length;u>a;a++){var p=this[a],h=t.data(p,e);if(h)if(t.isFunction(h[n])&&"_"!==n.charAt(0)){var f=h[n].apply(h,s);if(void 0!==f)return f}else r("no such method '"+n+"' for "+e+" instance");else r("cannot call methods on "+e+" prior to initialization; "+"attempted to call '"+n+"'")}return this}return this.each(function(){var o=t.data(this,e);o?(o.option(n),o._init()):(o=new i(this,n),t.data(this,e,o))})}}if(t){var r="undefined"==typeof console?e:function(t){console.error(t)};return t.bridget=function(t,e){i(e),n(t,e)},t.bridget}}var o=Array.prototype.slice;"function"==typeof define&&define.amd?define("jquery-bridget/jquery.bridget",["jquery"],i):i(t.jQuery)})(window),function(t){function e(e){var i=t.event;return i.target=i.target||i.srcElement||e,i}var i=document.documentElement,o=function(){};i.addEventListener?o=function(t,e,i){t.addEventListener(e,i,!1)}:i.attachEvent&&(o=function(t,i,o){t[i+o]=o.handleEvent?function(){var i=e(t);o.handleEvent.call(o,i)}:function(){var i=e(t);o.call(t,i)},t.attachEvent("on"+i,t[i+o])});var n=function(){};i.removeEventListener?n=function(t,e,i){t.removeEventListener(e,i,!1)}:i.detachEvent&&(n=function(t,e,i){t.detachEvent("on"+e,t[e+i]);try{delete t[e+i]}catch(o){t[e+i]=void 0}});var r={bind:o,unbind:n};"function"==typeof define&&define.amd?define("eventie/eventie",r):"object"==typeof exports?module.exports=r:t.eventie=r}(this),function(t){function e(t){"function"==typeof t&&(e.isReady?t():r.push(t))}function i(t){var i="readystatechange"===t.type&&"complete"!==n.readyState;if(!e.isReady&&!i){e.isReady=!0;for(var o=0,s=r.length;s>o;o++){var a=r[o];a()}}}function o(o){return o.bind(n,"DOMContentLoaded",i),o.bind(n,"readystatechange",i),o.bind(t,"load",i),e}var n=t.document,r=[];e.isReady=!1,"function"==typeof define&&define.amd?(e.isReady="function"==typeof requirejs,define("doc-ready/doc-ready",["eventie/eventie"],o)):t.docReady=o(t.eventie)}(this),function(){function t(){}function e(t,e){for(var i=t.length;i--;)if(t[i].listener===e)return i;return-1}function i(t){return function(){return this[t].apply(this,arguments)}}var o=t.prototype,n=this,r=n.EventEmitter;o.getListeners=function(t){var e,i,o=this._getEvents();if(t instanceof RegExp){e={};for(i in o)o.hasOwnProperty(i)&&t.test(i)&&(e[i]=o[i])}else e=o[t]||(o[t]=[]);return e},o.flattenListeners=function(t){var e,i=[];for(e=0;t.length>e;e+=1)i.push(t[e].listener);return i},o.getListenersAsObject=function(t){var e,i=this.getListeners(t);return i instanceof Array&&(e={},e[t]=i),e||i},o.addListener=function(t,i){var o,n=this.getListenersAsObject(t),r="object"==typeof i;for(o in n)n.hasOwnProperty(o)&&-1===e(n[o],i)&&n[o].push(r?i:{listener:i,once:!1});return this},o.on=i("addListener"),o.addOnceListener=function(t,e){return this.addListener(t,{listener:e,once:!0})},o.once=i("addOnceListener"),o.defineEvent=function(t){return this.getListeners(t),this},o.defineEvents=function(t){for(var e=0;t.length>e;e+=1)this.defineEvent(t[e]);return this},o.removeListener=function(t,i){var o,n,r=this.getListenersAsObject(t);for(n in r)r.hasOwnProperty(n)&&(o=e(r[n],i),-1!==o&&r[n].splice(o,1));return this},o.off=i("removeListener"),o.addListeners=function(t,e){return this.manipulateListeners(!1,t,e)},o.removeListeners=function(t,e){return this.manipulateListeners(!0,t,e)},o.manipulateListeners=function(t,e,i){var o,n,r=t?this.removeListener:this.addListener,s=t?this.removeListeners:this.addListeners;if("object"!=typeof e||e instanceof RegExp)for(o=i.length;o--;)r.call(this,e,i[o]);else for(o in e)e.hasOwnProperty(o)&&(n=e[o])&&("function"==typeof n?r.call(this,o,n):s.call(this,o,n));return this},o.removeEvent=function(t){var e,i=typeof t,o=this._getEvents();if("string"===i)delete o[t];else if(t instanceof RegExp)for(e in o)o.hasOwnProperty(e)&&t.test(e)&&delete o[e];else delete this._events;return this},o.removeAllListeners=i("removeEvent"),o.emitEvent=function(t,e){var i,o,n,r,s=this.getListenersAsObject(t);for(n in s)if(s.hasOwnProperty(n))for(o=s[n].length;o--;)i=s[n][o],i.once===!0&&this.removeListener(t,i.listener),r=i.listener.apply(this,e||[]),r===this._getOnceReturnValue()&&this.removeListener(t,i.listener);return this},o.trigger=i("emitEvent"),o.emit=function(t){var e=Array.prototype.slice.call(arguments,1);return this.emitEvent(t,e)},o.setOnceReturnValue=function(t){return this._onceReturnValue=t,this},o._getOnceReturnValue=function(){return this.hasOwnProperty("_onceReturnValue")?this._onceReturnValue:!0},o._getEvents=function(){return this._events||(this._events={})},t.noConflict=function(){return n.EventEmitter=r,t},"function"==typeof define&&define.amd?define("eventEmitter/EventEmitter",[],function(){return t}):"object"==typeof module&&module.exports?module.exports=t:this.EventEmitter=t}.call(this),function(t){function e(t){if(t){if("string"==typeof o[t])return t;t=t.charAt(0).toUpperCase()+t.slice(1);for(var e,n=0,r=i.length;r>n;n++)if(e=i[n]+t,"string"==typeof o[e])return e}}var i="Webkit Moz ms Ms O".split(" "),o=document.documentElement.style;"function"==typeof define&&define.amd?define("get-style-property/get-style-property",[],function(){return e}):"object"==typeof exports?module.exports=e:t.getStyleProperty=e}(window),function(t){function e(t){var e=parseFloat(t),i=-1===t.indexOf("%")&&!isNaN(e);return i&&e}function i(){for(var t={width:0,height:0,innerWidth:0,innerHeight:0,outerWidth:0,outerHeight:0},e=0,i=s.length;i>e;e++){var o=s[e];t[o]=0}return t}function o(t){function o(t){if("string"==typeof t&&(t=document.querySelector(t)),t&&"object"==typeof t&&t.nodeType){var o=r(t);if("none"===o.display)return i();var n={};n.width=t.offsetWidth,n.height=t.offsetHeight;for(var h=n.isBorderBox=!(!p||!o[p]||"border-box"!==o[p]),f=0,d=s.length;d>f;f++){var l=s[f],c=o[l];c=a(t,c);var y=parseFloat(c);n[l]=isNaN(y)?0:y}var m=n.paddingLeft+n.paddingRight,g=n.paddingTop+n.paddingBottom,v=n.marginLeft+n.marginRight,_=n.marginTop+n.marginBottom,I=n.borderLeftWidth+n.borderRightWidth,L=n.borderTopWidth+n.borderBottomWidth,z=h&&u,S=e(o.width);S!==!1&&(n.width=S+(z?0:m+I));var b=e(o.height);return b!==!1&&(n.height=b+(z?0:g+L)),n.innerWidth=n.width-(m+I),n.innerHeight=n.height-(g+L),n.outerWidth=n.width+v,n.outerHeight=n.height+_,n}}function a(t,e){if(n||-1===e.indexOf("%"))return e;var i=t.style,o=i.left,r=t.runtimeStyle,s=r&&r.left;return s&&(r.left=t.currentStyle.left),i.left=e,e=i.pixelLeft,i.left=o,s&&(r.left=s),e}var u,p=t("boxSizing");return function(){if(p){var t=document.createElement("div");t.style.width="200px",t.style.padding="1px 2px 3px 4px",t.style.borderStyle="solid",t.style.borderWidth="1px 2px 3px 4px",t.style[p]="border-box";var i=document.body||document.documentElement;i.appendChild(t);var o=r(t);u=200===e(o.width),i.removeChild(t)}}(),o}var n=t.getComputedStyle,r=n?function(t){return n(t,null)}:function(t){return t.currentStyle},s=["paddingLeft","paddingRight","paddingTop","paddingBottom","marginLeft","marginRight","marginTop","marginBottom","borderLeftWidth","borderRightWidth","borderTopWidth","borderBottomWidth"];"function"==typeof define&&define.amd?define("get-size/get-size",["get-style-property/get-style-property"],o):"object"==typeof exports?module.exports=o(require("get-style-property")):t.getSize=o(t.getStyleProperty)}(window),function(t,e){function i(t,e){return t[a](e)}function o(t){if(!t.parentNode){var e=document.createDocumentFragment();e.appendChild(t)}}function n(t,e){o(t);for(var i=t.parentNode.querySelectorAll(e),n=0,r=i.length;r>n;n++)if(i[n]===t)return!0;return!1}function r(t,e){return o(t),i(t,e)}var s,a=function(){if(e.matchesSelector)return"matchesSelector";for(var t=["webkit","moz","ms","o"],i=0,o=t.length;o>i;i++){var n=t[i],r=n+"MatchesSelector";if(e[r])return r}}();if(a){var u=document.createElement("div"),p=i(u,"div");s=p?i:r}else s=n;"function"==typeof define&&define.amd?define("matches-selector/matches-selector",[],function(){return s}):window.matchesSelector=s}(this,Element.prototype),function(t){function e(t,e){for(var i in e)t[i]=e[i];return t}function i(t){for(var e in t)return!1;return e=null,!0}function o(t){return t.replace(/([A-Z])/g,function(t){return"-"+t.toLowerCase()})}function n(t,n,r){function a(t,e){t&&(this.element=t,this.layout=e,this.position={x:0,y:0},this._create())}var u=r("transition"),p=r("transform"),h=u&&p,f=!!r("perspective"),d={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"otransitionend",transition:"transitionend"}[u],l=["transform","transition","transitionDuration","transitionProperty"],c=function(){for(var t={},e=0,i=l.length;i>e;e++){var o=l[e],n=r(o);n&&n!==o&&(t[o]=n)}return t}();e(a.prototype,t.prototype),a.prototype._create=function(){this._transn={ingProperties:{},clean:{},onEnd:{}},this.css({position:"absolute"})},a.prototype.handleEvent=function(t){var e="on"+t.type;this[e]&&this[e](t)},a.prototype.getSize=function(){this.size=n(this.element)},a.prototype.css=function(t){var e=this.element.style;for(var i in t){var o=c[i]||i;e[o]=t[i]}},a.prototype.getPosition=function(){var t=s(this.element),e=this.layout.options,i=e.isOriginLeft,o=e.isOriginTop,n=parseInt(t[i?"left":"right"],10),r=parseInt(t[o?"top":"bottom"],10);n=isNaN(n)?0:n,r=isNaN(r)?0:r;var a=this.layout.size;n-=i?a.paddingLeft:a.paddingRight,r-=o?a.paddingTop:a.paddingBottom,this.position.x=n,this.position.y=r},a.prototype.layoutPosition=function(){var t=this.layout.size,e=this.layout.options,i={};e.isOriginLeft?(i.left=this.position.x+t.paddingLeft+"px",i.right=""):(i.right=this.position.x+t.paddingRight+"px",i.left=""),e.isOriginTop?(i.top=this.position.y+t.paddingTop+"px",i.bottom=""):(i.bottom=this.position.y+t.paddingBottom+"px",i.top=""),this.css(i),this.emitEvent("layout",[this])};var y=f?function(t,e){return"translate3d("+t+"px, "+e+"px, 0)"}:function(t,e){return"translate("+t+"px, "+e+"px)"};a.prototype._transitionTo=function(t,e){this.getPosition();var i=this.position.x,o=this.position.y,n=parseInt(t,10),r=parseInt(e,10),s=n===this.position.x&&r===this.position.y;if(this.setPosition(t,e),s&&!this.isTransitioning)return this.layoutPosition(),void 0;var a=t-i,u=e-o,p={},h=this.layout.options;a=h.isOriginLeft?a:-a,u=h.isOriginTop?u:-u,p.transform=y(a,u),this.transition({to:p,onTransitionEnd:{transform:this.layoutPosition},isCleaning:!0})},a.prototype.goTo=function(t,e){this.setPosition(t,e),this.layoutPosition()},a.prototype.moveTo=h?a.prototype._transitionTo:a.prototype.goTo,a.prototype.setPosition=function(t,e){this.position.x=parseInt(t,10),this.position.y=parseInt(e,10)},a.prototype._nonTransition=function(t){this.css(t.to),t.isCleaning&&this._removeStyles(t.to);for(var e in t.onTransitionEnd)t.onTransitionEnd[e].call(this)},a.prototype._transition=function(t){if(!parseFloat(this.layout.options.transitionDuration))return this._nonTransition(t),void 0;var e=this._transn;for(var i in t.onTransitionEnd)e.onEnd[i]=t.onTransitionEnd[i];for(i in t.to)e.ingProperties[i]=!0,t.isCleaning&&(e.clean[i]=!0);if(t.from){this.css(t.from);var o=this.element.offsetHeight;o=null}this.enableTransition(t.to),this.css(t.to),this.isTransitioning=!0};var m=p&&o(p)+",opacity";a.prototype.enableTransition=function(){this.isTransitioning||(this.css({transitionProperty:m,transitionDuration:this.layout.options.transitionDuration}),this.element.addEventListener(d,this,!1))},a.prototype.transition=a.prototype[u?"_transition":"_nonTransition"],a.prototype.onwebkitTransitionEnd=function(t){this.ontransitionend(t)},a.prototype.onotransitionend=function(t){this.ontransitionend(t)};var g={"-webkit-transform":"transform","-moz-transform":"transform","-o-transform":"transform"};a.prototype.ontransitionend=function(t){if(t.target===this.element){var e=this._transn,o=g[t.propertyName]||t.propertyName;if(delete e.ingProperties[o],i(e.ingProperties)&&this.disableTransition(),o in e.clean&&(this.element.style[t.propertyName]="",delete e.clean[o]),o in e.onEnd){var n=e.onEnd[o];n.call(this),delete e.onEnd[o]}this.emitEvent("transitionEnd",[this])}},a.prototype.disableTransition=function(){this.removeTransitionStyles(),this.element.removeEventListener(d,this,!1),this.isTransitioning=!1},a.prototype._removeStyles=function(t){var e={};for(var i in t)e[i]="";this.css(e)};var v={transitionProperty:"",transitionDuration:""};return a.prototype.removeTransitionStyles=function(){this.css(v)},a.prototype.removeElem=function(){this.element.parentNode.removeChild(this.element),this.emitEvent("remove",[this])},a.prototype.remove=function(){if(!u||!parseFloat(this.layout.options.transitionDuration))return this.removeElem(),void 0;var t=this;this.on("transitionEnd",function(){return t.removeElem(),!0}),this.hide()},a.prototype.reveal=function(){delete this.isHidden,this.css({display:""});var t=this.layout.options;this.transition({from:t.hiddenStyle,to:t.visibleStyle,isCleaning:!0})},a.prototype.hide=function(){this.isHidden=!0,this.css({display:""});var t=this.layout.options;this.transition({from:t.visibleStyle,to:t.hiddenStyle,isCleaning:!0,onTransitionEnd:{opacity:function(){this.isHidden&&this.css({display:"none"})}}})},a.prototype.destroy=function(){this.css({position:"",left:"",right:"",top:"",bottom:"",transition:"",transform:""})},a}var r=t.getComputedStyle,s=r?function(t){return r(t,null)}:function(t){return t.currentStyle};"function"==typeof define&&define.amd?define("outlayer/item",["eventEmitter/EventEmitter","get-size/get-size","get-style-property/get-style-property"],n):(t.Outlayer={},t.Outlayer.Item=n(t.EventEmitter,t.getSize,t.getStyleProperty))}(window),function(t){function e(t,e){for(var i in e)t[i]=e[i];return t}function i(t){return"[object Array]"===f.call(t)}function o(t){var e=[];if(i(t))e=t;else if(t&&"number"==typeof t.length)for(var o=0,n=t.length;n>o;o++)e.push(t[o]);else e.push(t);return e}function n(t,e){var i=l(e,t);-1!==i&&e.splice(i,1)}function r(t){return t.replace(/(.)([A-Z])/g,function(t,e,i){return e+"-"+i}).toLowerCase()}function s(i,s,f,l,c,y){function m(t,i){if("string"==typeof t&&(t=a.querySelector(t)),!t||!d(t))return u&&u.error("Bad "+this.constructor.namespace+" element: "+t),void 0;this.element=t,this.options=e({},this.constructor.defaults),this.option(i);var o=++g;this.element.outlayerGUID=o,v[o]=this,this._create(),this.options.isInitLayout&&this.layout()}var g=0,v={};return m.namespace="outlayer",m.Item=y,m.defaults={containerStyle:{position:"relative"},isInitLayout:!0,isOriginLeft:!0,isOriginTop:!0,isResizeBound:!0,isResizingContainer:!0,transitionDuration:"0.4s",hiddenStyle:{opacity:0,transform:"scale(0.001)"},visibleStyle:{opacity:1,transform:"scale(1)"}},e(m.prototype,f.prototype),m.prototype.option=function(t){e(this.options,t)},m.prototype._create=function(){this.reloadItems(),this.stamps=[],this.stamp(this.options.stamp),e(this.element.style,this.options.containerStyle),this.options.isResizeBound&&this.bindResize()},m.prototype.reloadItems=function(){this.items=this._itemize(this.element.children)},m.prototype._itemize=function(t){for(var e=this._filterFindItemElements(t),i=this.constructor.Item,o=[],n=0,r=e.length;r>n;n++){var s=e[n],a=new i(s,this);o.push(a)}return o},m.prototype._filterFindItemElements=function(t){t=o(t);for(var e=this.options.itemSelector,i=[],n=0,r=t.length;r>n;n++){var s=t[n];if(d(s))if(e){c(s,e)&&i.push(s);for(var a=s.querySelectorAll(e),u=0,p=a.length;p>u;u++)i.push(a[u])}else i.push(s)}return i},m.prototype.getItemElements=function(){for(var t=[],e=0,i=this.items.length;i>e;e++)t.push(this.items[e].element);return t},m.prototype.layout=function(){this._resetLayout(),this._manageStamps();var t=void 0!==this.options.isLayoutInstant?this.options.isLayoutInstant:!this._isLayoutInited;this.layoutItems(this.items,t),this._isLayoutInited=!0},m.prototype._init=m.prototype.layout,m.prototype._resetLayout=function(){this.getSize()},m.prototype.getSize=function(){this.size=l(this.element)},m.prototype._getMeasurement=function(t,e){var i,o=this.options[t];o?("string"==typeof o?i=this.element.querySelector(o):d(o)&&(i=o),this[t]=i?l(i)[e]:o):this[t]=0},m.prototype.layoutItems=function(t,e){t=this._getItemsForLayout(t),this._layoutItems(t,e),this._postLayout()},m.prototype._getItemsForLayout=function(t){for(var e=[],i=0,o=t.length;o>i;i++){var n=t[i];n.isIgnored||e.push(n)}return e},m.prototype._layoutItems=function(t,e){function i(){o.emitEvent("layoutComplete",[o,t])}var o=this;if(!t||!t.length)return i(),void 0;this._itemsOn(t,"layout",i);for(var n=[],r=0,s=t.length;s>r;r++){var a=t[r],u=this._getItemLayoutPosition(a);u.item=a,u.isInstant=e||a.isLayoutInstant,n.push(u)}this._processLayoutQueue(n)},m.prototype._getItemLayoutPosition=function(){return{x:0,y:0}},m.prototype._processLayoutQueue=function(t){for(var e=0,i=t.length;i>e;e++){var o=t[e];this._positionItem(o.item,o.x,o.y,o.isInstant)}},m.prototype._positionItem=function(t,e,i,o){o?t.goTo(e,i):t.moveTo(e,i)},m.prototype._postLayout=function(){this.resizeContainer()},m.prototype.resizeContainer=function(){if(this.options.isResizingContainer){var t=this._getContainerSize();t&&(this._setContainerMeasure(t.width,!0),this._setContainerMeasure(t.height,!1))}},m.prototype._getContainerSize=h,m.prototype._setContainerMeasure=function(t,e){if(void 0!==t){var i=this.size;i.isBorderBox&&(t+=e?i.paddingLeft+i.paddingRight+i.borderLeftWidth+i.borderRightWidth:i.paddingBottom+i.paddingTop+i.borderTopWidth+i.borderBottomWidth),t=Math.max(t,0),this.element.style[e?"width":"height"]=t+"px"}},m.prototype._itemsOn=function(t,e,i){function o(){return n++,n===r&&i.call(s),!0}for(var n=0,r=t.length,s=this,a=0,u=t.length;u>a;a++){var p=t[a];p.on(e,o)}},m.prototype.ignore=function(t){var e=this.getItem(t);e&&(e.isIgnored=!0)},m.prototype.unignore=function(t){var e=this.getItem(t);e&&delete e.isIgnored},m.prototype.stamp=function(t){if(t=this._find(t)){this.stamps=this.stamps.concat(t);for(var e=0,i=t.length;i>e;e++){var o=t[e];this.ignore(o)}}},m.prototype.unstamp=function(t){if(t=this._find(t))for(var e=0,i=t.length;i>e;e++){var o=t[e];n(o,this.stamps),this.unignore(o)}},m.prototype._find=function(t){return t?("string"==typeof t&&(t=this.element.querySelectorAll(t)),t=o(t)):void 0},m.prototype._manageStamps=function(){if(this.stamps&&this.stamps.length){this._getBoundingRect();for(var t=0,e=this.stamps.length;e>t;t++){var i=this.stamps[t];this._manageStamp(i)}}},m.prototype._getBoundingRect=function(){var t=this.element.getBoundingClientRect(),e=this.size;this._boundingRect={left:t.left+e.paddingLeft+e.borderLeftWidth,top:t.top+e.paddingTop+e.borderTopWidth,right:t.right-(e.paddingRight+e.borderRightWidth),bottom:t.bottom-(e.paddingBottom+e.borderBottomWidth)}},m.prototype._manageStamp=h,m.prototype._getElementOffset=function(t){var e=t.getBoundingClientRect(),i=this._boundingRect,o=l(t),n={left:e.left-i.left-o.marginLeft,top:e.top-i.top-o.marginTop,right:i.right-e.right-o.marginRight,bottom:i.bottom-e.bottom-o.marginBottom};return n},m.prototype.handleEvent=function(t){var e="on"+t.type;this[e]&&this[e](t)},m.prototype.bindResize=function(){this.isResizeBound||(i.bind(t,"resize",this),this.isResizeBound=!0)},m.prototype.unbindResize=function(){this.isResizeBound&&i.unbind(t,"resize",this),this.isResizeBound=!1},m.prototype.onresize=function(){function t(){e.resize(),delete e.resizeTimeout}this.resizeTimeout&&clearTimeout(this.resizeTimeout);var e=this;this.resizeTimeout=setTimeout(t,100)},m.prototype.resize=function(){this.isResizeBound&&this.needsResizeLayout()&&this.layout()},m.prototype.needsResizeLayout=function(){var t=l(this.element),e=this.size&&t;return e&&t.innerWidth!==this.size.innerWidth},m.prototype.addItems=function(t){var e=this._itemize(t);return e.length&&(this.items=this.items.concat(e)),e},m.prototype.appended=function(t){var e=this.addItems(t);e.length&&(this.layoutItems(e,!0),this.reveal(e))},m.prototype.prepended=function(t){var e=this._itemize(t);if(e.length){var i=this.items.slice(0);this.items=e.concat(i),this._resetLayout(),this._manageStamps(),this.layoutItems(e,!0),this.reveal(e),this.layoutItems(i)}},m.prototype.reveal=function(t){var e=t&&t.length;if(e)for(var i=0;e>i;i++){var o=t[i];o.reveal()}},m.prototype.hide=function(t){var e=t&&t.length;if(e)for(var i=0;e>i;i++){var o=t[i];o.hide()}},m.prototype.getItem=function(t){for(var e=0,i=this.items.length;i>e;e++){var o=this.items[e];if(o.element===t)return o}},m.prototype.getItems=function(t){if(t&&t.length){for(var e=[],i=0,o=t.length;o>i;i++){var n=t[i],r=this.getItem(n);r&&e.push(r)}return e}},m.prototype.remove=function(t){t=o(t);var e=this.getItems(t);if(e&&e.length){this._itemsOn(e,"remove",function(){this.emitEvent("removeComplete",[this,e])});for(var i=0,r=e.length;r>i;i++){var s=e[i];s.remove(),n(s,this.items)}}},m.prototype.destroy=function(){var t=this.element.style;t.height="",t.position="",t.width="";for(var e=0,i=this.items.length;i>e;e++){var o=this.items[e];o.destroy()}this.unbindResize(),delete this.element.outlayerGUID,p&&p.removeData(this.element,this.constructor.namespace)},m.data=function(t){var e=t&&t.outlayerGUID;return e&&v[e]},m.create=function(t,i){function o(){m.apply(this,arguments)}return Object.create?o.prototype=Object.create(m.prototype):e(o.prototype,m.prototype),o.prototype.constructor=o,o.defaults=e({},m.defaults),e(o.defaults,i),o.prototype.settings={},o.namespace=t,o.data=m.data,o.Item=function(){y.apply(this,arguments)},o.Item.prototype=new y,s(function(){for(var e=r(t),i=a.querySelectorAll(".js-"+e),n="data-"+e+"-options",s=0,h=i.length;h>s;s++){var f,d=i[s],l=d.getAttribute(n);try{f=l&&JSON.parse(l)}catch(c){u&&u.error("Error parsing "+n+" on "+d.nodeName.toLowerCase()+(d.id?"#"+d.id:"")+": "+c);continue}var y=new o(d,f);p&&p.data(d,t,y)}}),p&&p.bridget&&p.bridget(t,o),o},m.Item=y,m}var a=t.document,u=t.console,p=t.jQuery,h=function(){},f=Object.prototype.toString,d="object"==typeof HTMLElement?function(t){return t instanceof HTMLElement}:function(t){return t&&"object"==typeof t&&1===t.nodeType&&"string"==typeof t.nodeName},l=Array.prototype.indexOf?function(t,e){return t.indexOf(e)}:function(t,e){for(var i=0,o=t.length;o>i;i++)if(t[i]===e)return i;return-1};"function"==typeof define&&define.amd?define("outlayer/outlayer",["eventie/eventie","doc-ready/doc-ready","eventEmitter/EventEmitter","get-size/get-size","matches-selector/matches-selector","./item"],s):t.Outlayer=s(t.eventie,t.docReady,t.EventEmitter,t.getSize,t.matchesSelector,t.Outlayer.Item)}(window),function(t){function e(t){function e(){t.Item.apply(this,arguments)}e.prototype=new t.Item,e.prototype._create=function(){this.id=this.layout.itemGUID++,t.Item.prototype._create.call(this),this.sortData={}},e.prototype.updateSortData=function(){if(!this.isIgnored){this.sortData.id=this.id,this.sortData["original-order"]=this.id,this.sortData.random=Math.random();var t=this.layout.options.getSortData,e=this.layout._sorters;for(var i in t){var o=e[i];this.sortData[i]=o(this.element,this)}}};var i=e.prototype.destroy;return e.prototype.destroy=function(){i.apply(this,arguments),this.css({display:""})},e}"function"==typeof define&&define.amd?define("isotope/js/item",["outlayer/outlayer"],e):(t.Isotope=t.Isotope||{},t.Isotope.Item=e(t.Outlayer))}(window),function(t){function e(t,e){function i(t){this.isotope=t,t&&(this.options=t.options[this.namespace],this.element=t.element,this.items=t.filteredItems,this.size=t.size)}return function(){function t(t){return function(){return e.prototype[t].apply(this.isotope,arguments)}}for(var o=["_resetLayout","_getItemLayoutPosition","_manageStamp","_getContainerSize","_getElementOffset","needsResizeLayout"],n=0,r=o.length;r>n;n++){var s=o[n];i.prototype[s]=t(s)}}(),i.prototype.needsVerticalResizeLayout=function(){var e=t(this.isotope.element),i=this.isotope.size&&e;return i&&e.innerHeight!==this.isotope.size.innerHeight},i.prototype._getMeasurement=function(){this.isotope._getMeasurement.apply(this,arguments)},i.prototype.getColumnWidth=function(){this.getSegmentSize("column","Width")},i.prototype.getRowHeight=function(){this.getSegmentSize("row","Height")},i.prototype.getSegmentSize=function(t,e){var i=t+e,o="outer"+e;if(this._getMeasurement(i,o),!this[i]){var n=this.getFirstItemSize();this[i]=n&&n[o]||this.isotope.size["inner"+e]}},i.prototype.getFirstItemSize=function(){var e=this.isotope.filteredItems[0];return e&&e.element&&t(e.element)},i.prototype.layout=function(){this.isotope.layout.apply(this.isotope,arguments)},i.prototype.getSize=function(){this.isotope.getSize(),this.size=this.isotope.size},i.modes={},i.create=function(t,e){function o(){i.apply(this,arguments)}return o.prototype=new i,e&&(o.options=e),o.prototype.namespace=t,i.modes[t]=o,o},i}"function"==typeof define&&define.amd?define("isotope/js/layout-mode",["get-size/get-size","outlayer/outlayer"],e):(t.Isotope=t.Isotope||{},t.Isotope.LayoutMode=e(t.getSize,t.Outlayer))}(window),function(t){function e(t,e){var o=t.create("masonry");return o.prototype._resetLayout=function(){this.getSize(),this._getMeasurement("columnWidth","outerWidth"),this._getMeasurement("gutter","outerWidth"),this.measureColumns();var t=this.cols;for(this.colYs=[];t--;)this.colYs.push(0);this.maxY=0},o.prototype.measureColumns=function(){if(this.getContainerWidth(),!this.columnWidth){var t=this.items[0],i=t&&t.element;this.columnWidth=i&&e(i).outerWidth||this.containerWidth}this.columnWidth+=this.gutter,this.cols=Math.floor((this.containerWidth+this.gutter)/this.columnWidth),this.cols=Math.max(this.cols,1)},o.prototype.getContainerWidth=function(){var t=this.options.isFitWidth?this.element.parentNode:this.element,i=e(t);this.containerWidth=i&&i.innerWidth},o.prototype._getItemLayoutPosition=function(t){t.getSize();var e=t.size.outerWidth%this.columnWidth,o=e&&1>e?"round":"ceil",n=Math[o](t.size.outerWidth/this.columnWidth);n=Math.min(n,this.cols);for(var r=this._getColGroup(n),s=Math.min.apply(Math,r),a=i(r,s),u={x:this.columnWidth*a,y:s},p=s+t.size.outerHeight,h=this.cols+1-r.length,f=0;h>f;f++)this.colYs[a+f]=p;return u},o.prototype._getColGroup=function(t){if(2>t)return this.colYs;for(var e=[],i=this.cols+1-t,o=0;i>o;o++){var n=this.colYs.slice(o,o+t);e[o]=Math.max.apply(Math,n)}return e},o.prototype._manageStamp=function(t){var i=e(t),o=this._getElementOffset(t),n=this.options.isOriginLeft?o.left:o.right,r=n+i.outerWidth,s=Math.floor(n/this.columnWidth);s=Math.max(0,s);var a=Math.floor(r/this.columnWidth);a-=r%this.columnWidth?0:1,a=Math.min(this.cols-1,a);for(var u=(this.options.isOriginTop?o.top:o.bottom)+i.outerHeight,p=s;a>=p;p++)this.colYs[p]=Math.max(u,this.colYs[p])},o.prototype._getContainerSize=function(){this.maxY=Math.max.apply(Math,this.colYs);var t={height:this.maxY};return this.options.isFitWidth&&(t.width=this._getContainerFitWidth()),t},o.prototype._getContainerFitWidth=function(){for(var t=0,e=this.cols;--e&&0===this.colYs[e];)t++;return(this.cols-t)*this.columnWidth-this.gutter},o.prototype.needsResizeLayout=function(){var t=this.containerWidth;return this.getContainerWidth(),t!==this.containerWidth},o}var i=Array.prototype.indexOf?function(t,e){return t.indexOf(e)}:function(t,e){for(var i=0,o=t.length;o>i;i++){var n=t[i];if(n===e)return i}return-1};"function"==typeof define&&define.amd?define("masonry/masonry",["outlayer/outlayer","get-size/get-size"],e):t.Masonry=e(t.Outlayer,t.getSize)}(window),function(t){function e(t,e){for(var i in e)t[i]=e[i];return t}function i(t,i){var o=t.create("masonry"),n=o.prototype._getElementOffset,r=o.prototype.layout,s=o.prototype._getMeasurement;e(o.prototype,i.prototype),o.prototype._getElementOffset=n,o.prototype.layout=r,o.prototype._getMeasurement=s;var a=o.prototype.measureColumns;o.prototype.measureColumns=function(){this.items=this.isotope.filteredItems,a.call(this)};var u=o.prototype._manageStamp;return o.prototype._manageStamp=function(){this.options.isOriginLeft=this.isotope.options.isOriginLeft,this.options.isOriginTop=this.isotope.options.isOriginTop,u.apply(this,arguments)},o}"function"==typeof define&&define.amd?define("isotope/js/layout-modes/masonry",["../layout-mode","masonry/masonry"],i):i(t.Isotope.LayoutMode,t.Masonry)}(window),function(t){function e(t){var e=t.create("fitRows");return e.prototype._resetLayout=function(){this.x=0,this.y=0,this.maxY=0},e.prototype._getItemLayoutPosition=function(t){t.getSize(),0!==this.x&&t.size.outerWidth+this.x>this.isotope.size.innerWidth&&(this.x=0,this.y=this.maxY);var e={x:this.x,y:this.y};return this.maxY=Math.max(this.maxY,this.y+t.size.outerHeight),this.x+=t.size.outerWidth,e},e.prototype._getContainerSize=function(){return{height:this.maxY}},e}"function"==typeof define&&define.amd?define("isotope/js/layout-modes/fit-rows",["../layout-mode"],e):e(t.Isotope.LayoutMode)}(window),function(t){function e(t){var e=t.create("vertical",{horizontalAlignment:0});return e.prototype._resetLayout=function(){this.y=0},e.prototype._getItemLayoutPosition=function(t){t.getSize();var e=(this.isotope.size.innerWidth-t.size.outerWidth)*this.options.horizontalAlignment,i=this.y;return this.y+=t.size.outerHeight,{x:e,y:i}},e.prototype._getContainerSize=function(){return{height:this.y}},e}"function"==typeof define&&define.amd?define("isotope/js/layout-modes/vertical",["../layout-mode"],e):e(t.Isotope.LayoutMode)}(window),function(t){function e(t,e){for(var i in e)t[i]=e[i];return t}function i(t){return"[object Array]"===h.call(t)}function o(t){var e=[];if(i(t))e=t;else if(t&&"number"==typeof t.length)for(var o=0,n=t.length;n>o;o++)e.push(t[o]);else e.push(t);return e}function n(t,e){var i=f(e,t);-1!==i&&e.splice(i,1)}function r(t,i,r,u,h){function f(t,e){return function(i,o){for(var n=0,r=t.length;r>n;n++){var s=t[n],a=i.sortData[s],u=o.sortData[s];if(a>u||u>a){var p=void 0!==e[s]?e[s]:e,h=p?1:-1;return(a>u?1:-1)*h}}return 0}}var d=t.create("isotope",{layoutMode:"masonry",isJQueryFiltering:!0,sortAscending:!0});d.Item=u,d.LayoutMode=h,d.prototype._create=function(){this.itemGUID=0,this._sorters={},this._getSorters(),t.prototype._create.call(this),this.modes={},this.filteredItems=this.items,this.sortHistory=["original-order"];for(var e in h.modes)this._initLayoutMode(e)},d.prototype.reloadItems=function(){this.itemGUID=0,t.prototype.reloadItems.call(this)},d.prototype._itemize=function(){for(var e=t.prototype._itemize.apply(this,arguments),i=0,o=e.length;o>i;i++){var n=e[i];n.id=this.itemGUID++}return this._updateItemsSortData(e),e},d.prototype._initLayoutMode=function(t){var i=h.modes[t],o=this.options[t]||{};this.options[t]=i.options?e(i.options,o):o,this.modes[t]=new i(this)},d.prototype.layout=function(){return!this._isLayoutInited&&this.options.isInitLayout?(this.arrange(),void 0):(this._layout(),void 0)},d.prototype._layout=function(){var t=this._getIsInstant();this._resetLayout(),this._manageStamps(),this.layoutItems(this.filteredItems,t),this._isLayoutInited=!0},d.prototype.arrange=function(t){this.option(t),this._getIsInstant(),this.filteredItems=this._filter(this.items),this._sort(),this._layout()},d.prototype._init=d.prototype.arrange,d.prototype._getIsInstant=function(){var t=void 0!==this.options.isLayoutInstant?this.options.isLayoutInstant:!this._isLayoutInited;return this._isInstant=t,t},d.prototype._filter=function(t){function e(){f.reveal(n),f.hide(r)}var i=this.options.filter;i=i||"*";for(var o=[],n=[],r=[],s=this._getFilterTest(i),a=0,u=t.length;u>a;a++){var p=t[a];if(!p.isIgnored){var h=s(p);h&&o.push(p),h&&p.isHidden?n.push(p):h||p.isHidden||r.push(p)}}var f=this;return this._isInstant?this._noTransition(e):e(),o},d.prototype._getFilterTest=function(t){return s&&this.options.isJQueryFiltering?function(e){return s(e.element).is(t)}:"function"==typeof t?function(e){return t(e.element)}:function(e){return r(e.element,t)}},d.prototype.updateSortData=function(t){this._getSorters(),t=o(t);
 var e=this.getItems(t);e=e.length?e:this.items,this._updateItemsSortData(e)},d.prototype._getSorters=function(){var t=this.options.getSortData;for(var e in t){var i=t[e];this._sorters[e]=l(i)}},d.prototype._updateItemsSortData=function(t){for(var e=0,i=t.length;i>e;e++){var o=t[e];o.updateSortData()}};var l=function(){function t(t){if("string"!=typeof t)return t;var i=a(t).split(" "),o=i[0],n=o.match(/^\[(.+)\]$/),r=n&&n[1],s=e(r,o),u=d.sortDataParsers[i[1]];return t=u?function(t){return t&&u(s(t))}:function(t){return t&&s(t)}}function e(t,e){var i;return i=t?function(e){return e.getAttribute(t)}:function(t){var i=t.querySelector(e);return i&&p(i)}}return t}();d.sortDataParsers={parseInt:function(t){return parseInt(t,10)},parseFloat:function(t){return parseFloat(t)}},d.prototype._sort=function(){var t=this.options.sortBy;if(t){var e=[].concat.apply(t,this.sortHistory),i=f(e,this.options.sortAscending);this.filteredItems.sort(i),t!==this.sortHistory[0]&&this.sortHistory.unshift(t)}},d.prototype._mode=function(){var t=this.options.layoutMode,e=this.modes[t];if(!e)throw Error("No layout mode: "+t);return e.options=this.options[t],e},d.prototype._resetLayout=function(){t.prototype._resetLayout.call(this),this._mode()._resetLayout()},d.prototype._getItemLayoutPosition=function(t){return this._mode()._getItemLayoutPosition(t)},d.prototype._manageStamp=function(t){this._mode()._manageStamp(t)},d.prototype._getContainerSize=function(){return this._mode()._getContainerSize()},d.prototype.needsResizeLayout=function(){return this._mode().needsResizeLayout()},d.prototype.appended=function(t){var e=this.addItems(t);if(e.length){var i=this._filterRevealAdded(e);this.filteredItems=this.filteredItems.concat(i)}},d.prototype.prepended=function(t){var e=this._itemize(t);if(e.length){var i=this.items.slice(0);this.items=e.concat(i),this._resetLayout(),this._manageStamps();var o=this._filterRevealAdded(e);this.layoutItems(i),this.filteredItems=o.concat(this.filteredItems)}},d.prototype._filterRevealAdded=function(t){var e=this._noTransition(function(){return this._filter(t)});return this.layoutItems(e,!0),this.reveal(e),t},d.prototype.insert=function(t){var e=this.addItems(t);if(e.length){var i,o,n=e.length;for(i=0;n>i;i++)o=e[i],this.element.appendChild(o.element);var r=this._filter(e);for(this._noTransition(function(){this.hide(r)}),i=0;n>i;i++)e[i].isLayoutInstant=!0;for(this.arrange(),i=0;n>i;i++)delete e[i].isLayoutInstant;this.reveal(r)}};var c=d.prototype.remove;return d.prototype.remove=function(t){t=o(t);var e=this.getItems(t);if(c.call(this,t),e&&e.length)for(var i=0,r=e.length;r>i;i++){var s=e[i];n(s,this.filteredItems)}},d.prototype.shuffle=function(){for(var t=0,e=this.items.length;e>t;t++){var i=this.items[t];i.sortData.random=Math.random()}this.options.sortBy="random",this._sort(),this._layout()},d.prototype._noTransition=function(t){var e=this.options.transitionDuration;this.options.transitionDuration=0;var i=t.call(this);return this.options.transitionDuration=e,i},d.prototype.getFilteredItemElements=function(){for(var t=[],e=0,i=this.filteredItems.length;i>e;e++)t.push(this.filteredItems[e].element);return t},d}var s=t.jQuery,a=String.prototype.trim?function(t){return t.trim()}:function(t){return t.replace(/^\s+|\s+$/g,"")},u=document.documentElement,p=u.textContent?function(t){return t.textContent}:function(t){return t.innerText},h=Object.prototype.toString,f=Array.prototype.indexOf?function(t,e){return t.indexOf(e)}:function(t,e){for(var i=0,o=t.length;o>i;i++)if(t[i]===e)return i;return-1};"function"==typeof define&&define.amd?define(["outlayer/outlayer","get-size/get-size","matches-selector/matches-selector","isotope/js/item","isotope/js/layout-mode","isotope/js/layout-modes/masonry","isotope/js/layout-modes/fit-rows","isotope/js/layout-modes/vertical"],r):t.Isotope=r(t.Outlayer,t.getSize,t.matchesSelector,t.Isotope.Item,t.Isotope.LayoutMode)}(window);
+/**
+ * Mega pixel image rendering library for iOS6 Safari
+ *
+ * Fixes iOS6 Safari's image file rendering issue for large size image (over mega-pixel),
+ * which causes unexpected subsampling when drawing it in canvas.
+ * By using this library, you can safely render the image with proper stretching.
+ *
+ * Copyright (c) 2012 Shinichi Tomita <shinichi.tomita@gmail.com>
+ * Released under the MIT license
+ */
+(function() {
+
+  /**
+   * Detect subsampling in loaded image.
+   * In iOS, larger images than 2M pixels may be subsampled in rendering.
+   */
+  function detectSubsampling(img) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    if (iw * ih > 1024 * 1024) { // subsampling may happen over megapixel image
+      var canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, -iw + 1, 0);
+      // subsampled image becomes half smaller in rendering size.
+      // check alpha channel value to confirm image is covering edge pixel or not.
+      // if alpha value is 0 image is not covering, hence subsampled.
+      return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Detecting vertical squash in loaded image.
+   * Fixes a bug which squash image vertically while drawing into canvas for some images.
+   */
+  function detectVerticalSquash(img, iw, ih) {
+    var canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = ih;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var data = ctx.getImageData(0, 0, 1, ih).data;
+    // search image edge pixel position in case it is squashed vertically.
+    var sy = 0;
+    var ey = ih;
+    var py = ih;
+    while (py > sy) {
+      var alpha = data[(py - 1) * 4 + 3];
+      if (alpha === 0) {
+        ey = py;
+      } else {
+        sy = py;
+      }
+      py = (ey + sy) >> 1;
+    }
+    var ratio = (py / ih);
+    return (ratio===0)?1:ratio;
+  }
+
+  /**
+   * Rendering image element (with resizing) and get its data URL
+   */
+  function renderImageToDataURL(img, options, doSquash) {
+    var canvas = document.createElement('canvas');
+    renderImageToCanvas(img, canvas, options, doSquash);
+    return canvas.toDataURL("image/jpeg", options.quality || 0.8);
+  }
+
+  /**
+   * Rendering image element (with resizing) into the canvas element
+   */
+  function renderImageToCanvas(img, canvas, options, doSquash) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    if (!(iw+ih)) return;
+    var width = options.width, height = options.height;
+    var ctx = canvas.getContext('2d');
+    ctx.save();
+    transformCoordinate(canvas, ctx, width, height, options.orientation);
+    var subsampled = detectSubsampling(img);
+    if (subsampled) {
+      iw /= 2;
+      ih /= 2;
+    }
+    var d = 1024; // size of tiling canvas
+    var tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = tmpCanvas.height = d;
+    var tmpCtx = tmpCanvas.getContext('2d');
+    var vertSquashRatio = doSquash ? detectVerticalSquash(img, iw, ih) : 1;
+    var dw = Math.ceil(d * width / iw);
+    var dh = Math.ceil(d * height / ih / vertSquashRatio);
+    var sy = 0;
+    var dy = 0;
+    while (sy < ih) {
+      var sx = 0;
+      var dx = 0;
+      while (sx < iw) {
+        tmpCtx.clearRect(0, 0, d, d);
+        tmpCtx.drawImage(img, -sx, -sy);
+        ctx.drawImage(tmpCanvas, 0, 0, d, d, dx, dy, dw, dh);
+        sx += d;
+        dx += dw;
+      }
+      sy += d;
+      dy += dh;
+    }
+    ctx.restore();
+    tmpCanvas = tmpCtx = null;
+  }
+
+  /**
+   * Transform canvas coordination according to specified frame size and orientation
+   * Orientation value is from EXIF tag
+   */
+  function transformCoordinate(canvas, ctx, width, height, orientation) {
+    switch (orientation) {
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+        canvas.width = height;
+        canvas.height = width;
+        break;
+      default:
+        canvas.width = width;
+        canvas.height = height;
+    }
+    switch (orientation) {
+      case 2:
+        // horizontal flip
+        ctx.translate(width, 0);
+        ctx.scale(-1, 1);
+        break;
+      case 3:
+        // 180 rotate left
+        ctx.translate(width, height);
+        ctx.rotate(Math.PI);
+        break;
+      case 4:
+        // vertical flip
+        ctx.translate(0, height);
+        ctx.scale(1, -1);
+        break;
+      case 5:
+        // vertical flip + 90 rotate right
+        ctx.rotate(0.5 * Math.PI);
+        ctx.scale(1, -1);
+        break;
+      case 6:
+        // 90 rotate right
+        ctx.rotate(0.5 * Math.PI);
+        ctx.translate(0, -height);
+        break;
+      case 7:
+        // horizontal flip + 90 rotate right
+        ctx.rotate(0.5 * Math.PI);
+        ctx.translate(width, -height);
+        ctx.scale(-1, 1);
+        break;
+      case 8:
+        // 90 rotate left
+        ctx.rotate(-0.5 * Math.PI);
+        ctx.translate(-width, 0);
+        break;
+      default:
+        break;
+    }
+  }
+
+  var URL = window.URL && window.URL.createObjectURL ? window.URL :
+            window.webkitURL && window.webkitURL.createObjectURL ? window.webkitURL :
+            null;
+
+  /**
+   * MegaPixImage class
+   */
+  function MegaPixImage(srcImage) {
+    if (window.Blob && srcImage instanceof Blob) {
+      if (!URL) { throw Error("No createObjectURL function found to create blob url"); }
+      var img = new Image();
+      img.src = URL.createObjectURL(srcImage);
+      this.blob = srcImage;
+      srcImage = img;
+    }
+    if (!srcImage.naturalWidth && !srcImage.naturalHeight) {
+      var _this = this;
+      srcImage.onload = srcImage.onerror = function() {
+        var listeners = _this.imageLoadListeners;
+        if (listeners) {
+          _this.imageLoadListeners = null;
+          for (var i=0, len=listeners.length; i<len; i++) {
+            listeners[i]();
+          }
+        }
+      };
+      this.imageLoadListeners = [];
+    }
+    this.srcImage = srcImage;
+  }
+
+  /**
+   * Rendering megapix image into specified target element
+   */
+  MegaPixImage.prototype.render = function(target, options, callback) {
+    if (this.imageLoadListeners) {
+      var _this = this;
+      this.imageLoadListeners.push(function() { _this.render(target, options, callback); });
+      return;
+    }
+    options = options || {};
+    var imgWidth = this.srcImage.naturalWidth, imgHeight = this.srcImage.naturalHeight,
+        width = options.width, height = options.height,
+        maxWidth = options.maxWidth, maxHeight = options.maxHeight,
+        doSquash = !this.blob || this.blob.type === 'image/jpeg';
+    if (width && !height) {
+      height = (imgHeight * width / imgWidth) << 0;
+    } else if (height && !width) {
+      width = (imgWidth * height / imgHeight) << 0;
+    } else {
+      width = imgWidth;
+      height = imgHeight;
+    }
+    if (maxWidth && width > maxWidth) {
+      width = maxWidth;
+      height = (imgHeight * width / imgWidth) << 0;
+    }
+    if (maxHeight && height > maxHeight) {
+      height = maxHeight;
+      width = (imgWidth * height / imgHeight) << 0;
+    }
+    var opt = { width : width, height : height };
+    for (var k in options) opt[k] = options[k];
+
+    var tagName = target.tagName.toLowerCase();
+    if (tagName === 'img') {
+      target.src = renderImageToDataURL(this.srcImage, opt, doSquash);
+    } else if (tagName === 'canvas') {
+      renderImageToCanvas(this.srcImage, target, opt, doSquash);
+    }
+    if (typeof this.onrender === 'function') {
+      this.onrender(target);
+    }
+    if (callback) {
+      callback();
+    }
+    if (this.blob) {
+      this.blob = null;
+      URL.revokeObjectURL(this.srcImage.src);
+    }
+  };
+
+  /**
+   * Export class to global
+   */
+  if (typeof define === 'function' && define.amd) {
+    define([], function() { return MegaPixImage; }); // for AMD loader
+  } else {
+    this.MegaPixImage = MegaPixImage;
+  }
+
+})();
+
+/*
+ * Binary Ajax 0.1.10
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+ */
+
+var BinaryFile = function(strData, iDataOffset, iDataLength) {
+    var data = strData;
+    var dataOffset = iDataOffset || 0;
+    var dataLength = 0;
+
+    this.getRawData = function() {
+        return data;
+    }
+
+    if (typeof strData == "string") {
+        dataLength = iDataLength || data.length;
+
+        this.getByteAt = function(iOffset) {
+            return data.charCodeAt(iOffset + dataOffset) & 0xFF;
+        }
+
+        this.getBytesAt = function(iOffset, iLength) {
+            var aBytes = [];
+
+            for (var i = 0; i < iLength; i++) {
+                aBytes[i] = data.charCodeAt((iOffset + i) + dataOffset) & 0xFF
+            }
+            ;
+
+            return aBytes;
+        }
+    } else if (typeof strData == "unknown") {
+        dataLength = iDataLength || IEBinary_getLength(data);
+
+        this.getByteAt = function(iOffset) {
+            return IEBinary_getByteAt(data, iOffset + dataOffset);
+        }
+
+        this.getBytesAt = function(iOffset, iLength) {
+            return new VBArray(IEBinary_getBytesAt(data, iOffset + dataOffset, iLength)).toArray();
+        }
+    }
+
+    this.getLength = function() {
+        return dataLength;
+    }
+
+    this.getSByteAt = function(iOffset) {
+        var iByte = this.getByteAt(iOffset);
+        if (iByte > 127)
+            return iByte - 256;
+        else
+            return iByte;
+    }
+
+    this.getShortAt = function(iOffset, bBigEndian) {
+        var iShort = bBigEndian ?
+                (this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
+                : (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
+        if (iShort < 0)
+            iShort += 65536;
+        return iShort;
+    }
+    this.getSShortAt = function(iOffset, bBigEndian) {
+        var iUShort = this.getShortAt(iOffset, bBigEndian);
+        if (iUShort > 32767)
+            return iUShort - 65536;
+        else
+            return iUShort;
+    }
+    this.getLongAt = function(iOffset, bBigEndian) {
+        var iByte1 = this.getByteAt(iOffset),
+                iByte2 = this.getByteAt(iOffset + 1),
+                iByte3 = this.getByteAt(iOffset + 2),
+                iByte4 = this.getByteAt(iOffset + 3);
+
+        var iLong = bBigEndian ?
+                (((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
+                : (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
+        if (iLong < 0)
+            iLong += 4294967296;
+        return iLong;
+    }
+    this.getSLongAt = function(iOffset, bBigEndian) {
+        var iULong = this.getLongAt(iOffset, bBigEndian);
+        if (iULong > 2147483647)
+            return iULong - 4294967296;
+        else
+            return iULong;
+    }
+
+    this.getStringAt = function(iOffset, iLength) {
+        var aStr = [];
+
+        var aBytes = this.getBytesAt(iOffset, iLength);
+        for (var j = 0; j < iLength; j++) {
+            aStr[j] = String.fromCharCode(aBytes[j]);
+        }
+        return aStr.join("");
+    }
+
+    this.getCharAt = function(iOffset) {
+        return String.fromCharCode(this.getByteAt(iOffset));
+    }
+    this.toBase64 = function() {
+        return window.btoa(data);
+    }
+    this.fromBase64 = function(strBase64) {
+        data = window.atob(strBase64);
+    }
+}
+
+
+var BinaryAjax = (function() {
+
+    function createRequest() {
+        var oHTTP = null;
+        if (window.ActiveXObject) {
+            oHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+        } else if (window.XMLHttpRequest) {
+            oHTTP = new XMLHttpRequest();
+        }
+        return oHTTP;
+    }
+
+    function getHead(strURL, fncCallback, fncError) {
+        var oHTTP = createRequest();
+        if (oHTTP) {
+            if (fncCallback) {
+                if (typeof(oHTTP.onload) != "undefined") {
+                    oHTTP.onload = function() {
+                        if (oHTTP.status == "200") {
+                            fncCallback(this);
+                        } else {
+                            if (fncError)
+                                fncError();
+                        }
+                        oHTTP = null;
+                    };
+                } else {
+                    oHTTP.onreadystatechange = function() {
+                        if (oHTTP.readyState == 4) {
+                            if (oHTTP.status == "200") {
+                                fncCallback(this);
+                            } else {
+                                if (fncError)
+                                    fncError();
+                            }
+                            oHTTP = null;
+                        }
+                    };
+                }
+            }
+            oHTTP.open("HEAD", strURL, true);
+            oHTTP.send(null);
+        } else {
+            if (fncError)
+                fncError();
+        }
+    }
+
+    function sendRequest(strURL, fncCallback, fncError, aRange, bAcceptRanges, iFileSize) {
+        var oHTTP = createRequest();
+        if (oHTTP) {
+
+            var iDataOffset = 0;
+            if (aRange && !bAcceptRanges) {
+                iDataOffset = aRange[0];
+            }
+            var iDataLen = 0;
+            if (aRange) {
+                iDataLen = aRange[1] - aRange[0] + 1;
+            }
+
+            if (fncCallback) {
+                if (typeof(oHTTP.onload) != "undefined") {
+                    oHTTP.onload = function() {
+                        if (oHTTP.status == "200" || oHTTP.status == "206" || oHTTP.status == "0") {
+                            oHTTP.binaryResponse = new BinaryFile(oHTTP.responseText, iDataOffset, iDataLen);
+                            oHTTP.fileSize = iFileSize || oHTTP.getResponseHeader("Content-Length");
+                            fncCallback(oHTTP);
+                        } else {
+                            if (fncError)
+                                fncError();
+                        }
+                        oHTTP = null;
+                    };
+                } else {
+                    oHTTP.onreadystatechange = function() {
+                        if (oHTTP.readyState == 4) {
+                            if (oHTTP.status == "200" || oHTTP.status == "206" || oHTTP.status == "0") {
+                                // IE6 craps if we try to extend the XHR object
+                                var oRes = {
+                                    status: oHTTP.status,
+                                    // IE needs responseBody, Chrome/Safari needs responseText
+                                    binaryResponse: new BinaryFile(
+                                            typeof oHTTP.responseBody == "unknown" ? oHTTP.responseBody : oHTTP.responseText, iDataOffset, iDataLen
+                                            ),
+                                    fileSize: iFileSize || oHTTP.getResponseHeader("Content-Length")
+                                };
+                                fncCallback(oRes);
+                            } else {
+                                if (fncError)
+                                    fncError();
+                            }
+                            oHTTP = null;
+                        }
+                    };
+                }
+            }
+            oHTTP.open("GET", strURL, true);
+
+            if (oHTTP.overrideMimeType)
+                oHTTP.overrideMimeType('text/plain; charset=x-user-defined');
+
+            if (aRange && bAcceptRanges) {
+                oHTTP.setRequestHeader("Range", "bytes=" + aRange[0] + "-" + aRange[1]);
+            }
+
+            oHTTP.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 1970 00:00:00 GMT");
+
+            oHTTP.send(null);
+        } else {
+            if (fncError)
+                fncError();
+        }
+    }
+
+    return function(strURL, fncCallback, fncError, aRange) {
+
+        if (aRange) {
+            getHead(
+                    strURL,
+                    function(oHTTP) {
+                        var iLength = parseInt(oHTTP.getResponseHeader("Content-Length"), 10);
+                        var strAcceptRanges = oHTTP.getResponseHeader("Accept-Ranges");
+
+                        var iStart, iEnd;
+                        iStart = aRange[0];
+                        if (aRange[0] < 0)
+                            iStart += iLength;
+                        iEnd = iStart + aRange[1] - 1;
+
+                        sendRequest(strURL, fncCallback, fncError, [iStart, iEnd], (strAcceptRanges == "bytes"), iLength);
+                    }
+            );
+
+        } else {
+            sendRequest(strURL, fncCallback, fncError);
+        }
+    }
+
+}());
+
+/*
+ document.write(
+ "<script type='text/vbscript'>\r\n"
+ + "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
+ + "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
+ + "End Function\r\n"
+ + "Function IEBinary_getLength(strBinary)\r\n"
+ + "	IEBinary_getLength = LenB(strBinary)\r\n"
+ + "End Function\r\n"
+ + "</script>\r\n"
+ );
+ */
+
+document.write(
+        "<script type='text/vbscript'>\r\n"
+        + "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
+        + "	IEBinary_getByteAt = AscB(MidB(strBinary, iOffset + 1, 1))\r\n"
+        + "End Function\r\n"
+        + "Function IEBinary_getBytesAt(strBinary, iOffset, iLength)\r\n"
+        + "  Dim aBytes()\r\n"
+        + "  ReDim aBytes(iLength - 1)\r\n"
+        + "  For i = 0 To iLength - 1\r\n"
+        + "   aBytes(i) = IEBinary_getByteAt(strBinary, iOffset + i)\r\n"
+        + "  Next\r\n"
+        + "  IEBinary_getBytesAt = aBytes\r\n"
+        + "End Function\r\n"
+        + "Function IEBinary_getLength(strBinary)\r\n"
+        + "	IEBinary_getLength = LenB(strBinary)\r\n"
+        + "End Function\r\n"
+        + "</script>\r\n"
+        );
+/*
+ * Javascript EXIF Reader 0.1.6
+ * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+ * Licensed under the MPL License [http://www.nihilogic.dk/licenses/mpl-license.txt]
+ */
+
+
+var EXIF = (function() {
+
+    var debug = false;
+
+    var ExifTags = {
+
+        // version tags
+        0x9000: "ExifVersion", // EXIF version
+        0xA000: "FlashpixVersion", // Flashpix format version
+
+        // colorspace tags
+        0xA001: "ColorSpace", // Color space information tag
+
+        // image configuration
+        0xA002: "PixelXDimension", // Valid width of meaningful image
+        0xA003: "PixelYDimension", // Valid height of meaningful image
+        0x9101: "ComponentsConfiguration", // Information about channels
+        0x9102: "CompressedBitsPerPixel", // Compressed bits per pixel
+
+        // user information
+        0x927C: "MakerNote", // Any desired information written by the manufacturer
+        0x9286: "UserComment", // Comments by user
+
+        // related file
+        0xA004: "RelatedSoundFile", // Name of related sound file
+
+        // date and time
+        0x9003: "DateTimeOriginal", // Date and time when the original image was generated
+        0x9004: "DateTimeDigitized", // Date and time when the image was stored digitally
+        0x9290: "SubsecTime", // Fractions of seconds for DateTime
+        0x9291: "SubsecTimeOriginal", // Fractions of seconds for DateTimeOriginal
+        0x9292: "SubsecTimeDigitized", // Fractions of seconds for DateTimeDigitized
+
+        // picture-taking conditions
+        0x829A: "ExposureTime", // Exposure time (in seconds)
+        0x829D: "FNumber", // F number
+        0x8822: "ExposureProgram", // Exposure program
+        0x8824: "SpectralSensitivity", // Spectral sensitivity
+        0x8827: "ISOSpeedRatings", // ISO speed rating
+        0x8828: "OECF", // Optoelectric conversion factor
+        0x9201: "ShutterSpeedValue", // Shutter speed
+        0x9202: "ApertureValue", // Lens aperture
+        0x9203: "BrightnessValue", // Value of brightness
+        0x9204: "ExposureBias", // Exposure bias
+        0x9205: "MaxApertureValue", // Smallest F number of lens
+        0x9206: "SubjectDistance", // Distance to subject in meters
+        0x9207: "MeteringMode", // Metering mode
+        0x9208: "LightSource", // Kind of light source
+        0x9209: "Flash", // Flash status
+        0x9214: "SubjectArea", // Location and area of main subject
+        0x920A: "FocalLength", // Focal length of the lens in mm
+        0xA20B: "FlashEnergy", // Strobe energy in BCPS
+        0xA20C: "SpatialFrequencyResponse", // 
+        0xA20E: "FocalPlaneXResolution", // Number of pixels in width direction per FocalPlaneResolutionUnit
+        0xA20F: "FocalPlaneYResolution", // Number of pixels in height direction per FocalPlaneResolutionUnit
+        0xA210: "FocalPlaneResolutionUnit", // Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+        0xA214: "SubjectLocation", // Location of subject in image
+        0xA215: "ExposureIndex", // Exposure index selected on camera
+        0xA217: "SensingMethod", // Image sensor type
+        0xA300: "FileSource", // Image source (3 == DSC)
+        0xA301: "SceneType", // Scene type (1 == directly photographed)
+        0xA302: "CFAPattern", // Color filter array geometric pattern
+        0xA401: "CustomRendered", // Special processing
+        0xA402: "ExposureMode", // Exposure mode
+        0xA403: "WhiteBalance", // 1 = auto white balance, 2 = manual
+        0xA404: "DigitalZoomRation", // Digital zoom ratio
+        0xA405: "FocalLengthIn35mmFilm", // Equivalent foacl length assuming 35mm film camera (in mm)
+        0xA406: "SceneCaptureType", // Type of scene
+        0xA407: "GainControl", // Degree of overall image gain adjustment
+        0xA408: "Contrast", // Direction of contrast processing applied by camera
+        0xA409: "Saturation", // Direction of saturation processing applied by camera
+        0xA40A: "Sharpness", // Direction of sharpness processing applied by camera
+        0xA40B: "DeviceSettingDescription", // 
+        0xA40C: "SubjectDistanceRange", // Distance to subject
+
+        // other tags
+        0xA005: "InteroperabilityIFDPointer",
+        0xA420: "ImageUniqueID"		// Identifier assigned uniquely to each image
+    };
+
+    var TiffTags = {
+        0x0100: "ImageWidth",
+        0x0101: "ImageHeight",
+        0x8769: "ExifIFDPointer",
+        0x8825: "GPSInfoIFDPointer",
+        0xA005: "InteroperabilityIFDPointer",
+        0x0102: "BitsPerSample",
+        0x0103: "Compression",
+        0x0106: "PhotometricInterpretation",
+        0x0112: "Orientation",
+        0x0115: "SamplesPerPixel",
+        0x011C: "PlanarConfiguration",
+        0x0212: "YCbCrSubSampling",
+        0x0213: "YCbCrPositioning",
+        0x011A: "XResolution",
+        0x011B: "YResolution",
+        0x0128: "ResolutionUnit",
+        0x0111: "StripOffsets",
+        0x0116: "RowsPerStrip",
+        0x0117: "StripByteCounts",
+        0x0201: "JPEGInterchangeFormat",
+        0x0202: "JPEGInterchangeFormatLength",
+        0x012D: "TransferFunction",
+        0x013E: "WhitePoint",
+        0x013F: "PrimaryChromaticities",
+        0x0211: "YCbCrCoefficients",
+        0x0214: "ReferenceBlackWhite",
+        0x0132: "DateTime",
+        0x010E: "ImageDescription",
+        0x010F: "Make",
+        0x0110: "Model",
+        0x0131: "Software",
+        0x013B: "Artist",
+        0x8298: "Copyright"
+    };
+
+    var GPSTags = {
+        0x0000: "GPSVersionID",
+        0x0001: "GPSLatitudeRef",
+        0x0002: "GPSLatitude",
+        0x0003: "GPSLongitudeRef",
+        0x0004: "GPSLongitude",
+        0x0005: "GPSAltitudeRef",
+        0x0006: "GPSAltitude",
+        0x0007: "GPSTimeStamp",
+        0x0008: "GPSSatellites",
+        0x0009: "GPSStatus",
+        0x000A: "GPSMeasureMode",
+        0x000B: "GPSDOP",
+        0x000C: "GPSSpeedRef",
+        0x000D: "GPSSpeed",
+        0x000E: "GPSTrackRef",
+        0x000F: "GPSTrack",
+        0x0010: "GPSImgDirectionRef",
+        0x0011: "GPSImgDirection",
+        0x0012: "GPSMapDatum",
+        0x0013: "GPSDestLatitudeRef",
+        0x0014: "GPSDestLatitude",
+        0x0015: "GPSDestLongitudeRef",
+        0x0016: "GPSDestLongitude",
+        0x0017: "GPSDestBearingRef",
+        0x0018: "GPSDestBearing",
+        0x0019: "GPSDestDistanceRef",
+        0x001A: "GPSDestDistance",
+        0x001B: "GPSProcessingMethod",
+        0x001C: "GPSAreaInformation",
+        0x001D: "GPSDateStamp",
+        0x001E: "GPSDifferential"
+    };
+
+    var StringValues = {
+        ExposureProgram: {
+            0: "Not defined",
+            1: "Manual",
+            2: "Normal program",
+            3: "Aperture priority",
+            4: "Shutter priority",
+            5: "Creative program",
+            6: "Action program",
+            7: "Portrait mode",
+            8: "Landscape mode"
+        },
+        MeteringMode: {
+            0: "Unknown",
+            1: "Average",
+            2: "CenterWeightedAverage",
+            3: "Spot",
+            4: "MultiSpot",
+            5: "Pattern",
+            6: "Partial",
+            255: "Other"
+        },
+        LightSource: {
+            0: "Unknown",
+            1: "Daylight",
+            2: "Fluorescent",
+            3: "Tungsten (incandescent light)",
+            4: "Flash",
+            9: "Fine weather",
+            10: "Cloudy weather",
+            11: "Shade",
+            12: "Daylight fluorescent (D 5700 - 7100K)",
+            13: "Day white fluorescent (N 4600 - 5400K)",
+            14: "Cool white fluorescent (W 3900 - 4500K)",
+            15: "White fluorescent (WW 3200 - 3700K)",
+            17: "Standard light A",
+            18: "Standard light B",
+            19: "Standard light C",
+            20: "D55",
+            21: "D65",
+            22: "D75",
+            23: "D50",
+            24: "ISO studio tungsten",
+            255: "Other"
+        },
+        Flash: {
+            0x0000: "Flash did not fire",
+            0x0001: "Flash fired",
+            0x0005: "Strobe return light not detected",
+            0x0007: "Strobe return light detected",
+            0x0009: "Flash fired, compulsory flash mode",
+            0x000D: "Flash fired, compulsory flash mode, return light not detected",
+            0x000F: "Flash fired, compulsory flash mode, return light detected",
+            0x0010: "Flash did not fire, compulsory flash mode",
+            0x0018: "Flash did not fire, auto mode",
+            0x0019: "Flash fired, auto mode",
+            0x001D: "Flash fired, auto mode, return light not detected",
+            0x001F: "Flash fired, auto mode, return light detected",
+            0x0020: "No flash function",
+            0x0041: "Flash fired, red-eye reduction mode",
+            0x0045: "Flash fired, red-eye reduction mode, return light not detected",
+            0x0047: "Flash fired, red-eye reduction mode, return light detected",
+            0x0049: "Flash fired, compulsory flash mode, red-eye reduction mode",
+            0x004D: "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+            0x004F: "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+            0x0059: "Flash fired, auto mode, red-eye reduction mode",
+            0x005D: "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+            0x005F: "Flash fired, auto mode, return light detected, red-eye reduction mode"
+        },
+        SensingMethod: {
+            1: "Not defined",
+            2: "One-chip color area sensor",
+            3: "Two-chip color area sensor",
+            4: "Three-chip color area sensor",
+            5: "Color sequential area sensor",
+            7: "Trilinear sensor",
+            8: "Color sequential linear sensor"
+        },
+        SceneCaptureType: {
+            0: "Standard",
+            1: "Landscape",
+            2: "Portrait",
+            3: "Night scene"
+        },
+        SceneType: {
+            1: "Directly photographed"
+        },
+        CustomRendered: {
+            0: "Normal process",
+            1: "Custom process"
+        },
+        WhiteBalance: {
+            0: "Auto white balance",
+            1: "Manual white balance"
+        },
+        GainControl: {
+            0: "None",
+            1: "Low gain up",
+            2: "High gain up",
+            3: "Low gain down",
+            4: "High gain down"
+        },
+        Contrast: {
+            0: "Normal",
+            1: "Soft",
+            2: "Hard"
+        },
+        Saturation: {
+            0: "Normal",
+            1: "Low saturation",
+            2: "High saturation"
+        },
+        Sharpness: {
+            0: "Normal",
+            1: "Soft",
+            2: "Hard"
+        },
+        SubjectDistanceRange: {
+            0: "Unknown",
+            1: "Macro",
+            2: "Close view",
+            3: "Distant view"
+        },
+        FileSource: {
+            3: "DSC"
+        },
+        Components: {
+            0: "",
+            1: "Y",
+            2: "Cb",
+            3: "Cr",
+            4: "R",
+            5: "G",
+            6: "B"
+        }
+    };
+
+    function addEvent(element, event, handler) {
+        if (element.addEventListener) {
+            element.addEventListener(event, handler, false);
+        } else if (element.attachEvent) {
+            element.attachEvent("on" + event, handler);
+        }
+    }
+
+    function imageHasData(img) {
+        return !!(img.exifdata);
+    }
+
+    function getImageData(img, callback) {
+        BinaryAjax(img.src, function(http) {
+            var data = findEXIFinJPEG(http.binaryResponse);
+            img.exifdata = data || {};
+            if (callback) {
+                callback.call(img)
+            }
+        });
+    }
+
+    function findEXIFinJPEG(file) {
+        if (file.getByteAt(0) != 0xFF || file.getByteAt(1) != 0xD8) {
+            return false; // not a valid jpeg
+        }
+
+        var offset = 2,
+                length = file.getLength(),
+                marker;
+
+        while (offset < length) {
+            if (file.getByteAt(offset) != 0xFF) {
+                if (debug)
+                    console.log("Not a valid marker at offset " + offset + ", found: " + file.getByteAt(offset));
+                return false; // not a valid marker, something is wrong
+            }
+
+            marker = file.getByteAt(offset + 1);
+
+            // we could implement handling for other markers here, 
+            // but we're only looking for 0xFFE1 for EXIF data
+
+            if (marker == 22400) {
+                if (debug)
+                    console.log("Found 0xFFE1 marker");
+
+                return readEXIFData(file, offset + 4, file.getShortAt(offset + 2, true) - 2);
+
+                // offset += 2 + file.getShortAt(offset+2, true);
+
+            } else if (marker == 225) {
+                // 0xE1 = Application-specific 1 (for EXIF)
+                if (debug)
+                    console.log("Found 0xFFE1 marker");
+
+                return readEXIFData(file, offset + 4, file.getShortAt(offset + 2, true) - 2);
+
+            } else {
+                offset += 2 + file.getShortAt(offset + 2, true);
+            }
+
+        }
+
+    }
+
+
+    function readTags(file, tiffStart, dirStart, strings, bigEnd) {
+        var entries = file.getShortAt(dirStart, bigEnd),
+                tags = {},
+                entryOffset, tag,
+                i;
+
+        for (i = 0; i < entries; i++) {
+            entryOffset = dirStart + i * 12 + 2;
+            tag = strings[file.getShortAt(entryOffset, bigEnd)];
+            if (!tag && debug)
+                console.log("Unknown tag: " + file.getShortAt(entryOffset, bigEnd));
+            tags[tag] = readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd);
+        }
+        return tags;
+    }
+
+
+    function readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
+        var type = file.getShortAt(entryOffset + 2, bigEnd),
+                numValues = file.getLongAt(entryOffset + 4, bigEnd),
+                valueOffset = file.getLongAt(entryOffset + 8, bigEnd) + tiffStart,
+                offset,
+                vals, val, n,
+                numerator, denominator;
+
+        switch (type) {
+            case 1: // byte, 8-bit unsigned int
+            case 7: // undefined, 8-bit byte, value depending on field
+                if (numValues == 1) {
+                    return file.getByteAt(entryOffset + 8, bigEnd);
+                } else {
+                    offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                    vals = [];
+                    for (n = 0; n < numValues; n++) {
+                        vals[n] = file.getByteAt(offset + n);
+                    }
+                    return vals;
+                }
+
+            case 2: // ascii, 8-bit byte
+                offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                return file.getStringAt(offset, numValues - 1);
+
+            case 3: // short, 16 bit int
+                if (numValues == 1) {
+                    return file.getShortAt(entryOffset + 8, bigEnd);
+                } else {
+                    offset = numValues > 2 ? valueOffset : (entryOffset + 8);
+                    vals = [];
+                    for (n = 0; n < numValues; n++) {
+                        vals[n] = file.getShortAt(offset + 2 * n, bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 4: // long, 32 bit int
+                if (numValues == 1) {
+                    return file.getLongAt(entryOffset + 8, bigEnd);
+                } else {
+                    vals = [];
+                    for (var n = 0; n < numValues; n++) {
+                        vals[n] = file.getLongAt(valueOffset + 4 * n, bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 5:	// rational = two long values, first is numerator, second is denominator
+                if (numValues == 1) {
+                    numerator = file.getLongAt(valueOffset, bigEnd);
+                    denominator = file.getLongAt(valueOffset + 4, bigEnd);
+                    val = new Number(numerator / denominator);
+                    val.numerator = numerator;
+                    val.denominator = denominator;
+                    return val;
+                } else {
+                    vals = [];
+                    for (n = 0; n < numValues; n++) {
+                        numerator = file.getLongAt(valueOffset + 8 * n, bigEnd);
+                        denominator = file.getLongAt(valueOffset + 4 + 8 * n, bigEnd);
+                        vals[n] = new Number(numerator / denominator);
+                        vals[n].numerator = numerator;
+                        vals[n].denominator = denominator;
+                    }
+                    return vals;
+                }
+
+            case 9: // slong, 32 bit signed int
+                if (numValues == 1) {
+                    return file.getSLongAt(entryOffset + 8, bigEnd);
+                } else {
+                    vals = [];
+                    for (n = 0; n < numValues; n++) {
+                        vals[n] = file.getSLongAt(valueOffset + 4 * n, bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 10: // signed rational, two slongs, first is numerator, second is denominator
+                if (numValues == 1) {
+                    return file.getSLongAt(valueOffset, bigEnd) / file.getSLongAt(valueOffset + 4, bigEnd);
+                } else {
+                    vals = [];
+                    for (n = 0; n < numValues; n++) {
+                        vals[n] = file.getSLongAt(valueOffset + 8 * n, bigEnd) / file.getSLongAt(valueOffset + 4 + 8 * n, bigEnd);
+                    }
+                    return vals;
+                }
+        }
+    }
+
+
+    function readEXIFData(file, start) {
+        if (file.getStringAt(start, 4) != "Exif") {
+            if (debug)
+                console.log("Not valid EXIF data! " + file.getStringAt(start, 4));
+            return false;
+        }
+
+        var bigEnd,
+                tags, tag,
+                exifData, gpsData,
+                tiffOffset = start + 6;
+
+        // test for TIFF validity and endianness
+        if (file.getShortAt(tiffOffset) == 0x4949) {
+            bigEnd = false;
+        } else if (file.getShortAt(tiffOffset) == 0x4D4D) {
+            bigEnd = true;
+        } else {
+            if (debug)
+                console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
+            return false;
+        }
+
+        if (file.getShortAt(tiffOffset + 2, bigEnd) != 0x002A) {
+            if (debug)
+                console.log("Not valid TIFF data! (no 0x002A)");
+            return false;
+        }
+
+        if (file.getLongAt(tiffOffset + 4, bigEnd) != 0x00000008) {
+            if (debug)
+                console.log("Not valid TIFF data! (First offset not 8)", file.getShortAt(tiffOffset + 4, bigEnd));
+            return false;
+        }
+
+        tags = readTags(file, tiffOffset, tiffOffset + 8, TiffTags, bigEnd);
+
+        if (tags.ExifIFDPointer) {
+            exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
+            for (tag in exifData) {
+                switch (tag) {
+                    case "LightSource" :
+                    case "Flash" :
+                    case "MeteringMode" :
+                    case "ExposureProgram" :
+                    case "SensingMethod" :
+                    case "SceneCaptureType" :
+                    case "SceneType" :
+                    case "CustomRendered" :
+                    case "WhiteBalance" :
+                    case "GainControl" :
+                    case "Contrast" :
+                    case "Saturation" :
+                    case "Sharpness" :
+                    case "SubjectDistanceRange" :
+                    case "FileSource" :
+                        exifData[tag] = StringValues[tag][exifData[tag]];
+                        break;
+
+                    case "ExifVersion" :
+                    case "FlashpixVersion" :
+                        exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
+                        break;
+
+                    case "ComponentsConfiguration" :
+                        exifData[tag] =
+                                StringValues.Components[exifData[tag][0]]
+                                + StringValues.Components[exifData[tag][1]]
+                                + StringValues.Components[exifData[tag][2]]
+                                + StringValues.Components[exifData[tag][3]];
+                        break;
+                }
+                tags[tag] = exifData[tag];
+            }
+        }
+
+        if (tags.GPSInfoIFDPointer) {
+            gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
+            for (tag in gpsData) {
+                switch (tag) {
+                    case "GPSVersionID" :
+                        gpsData[tag] = gpsData[tag][0]
+                                + "." + gpsData[tag][1]
+                                + "." + gpsData[tag][2]
+                                + "." + gpsData[tag][3];
+                        break;
+                }
+                tags[tag] = gpsData[tag];
+            }
+        }
+
+        return tags;
+    }
+
+
+    function getData(img, callback) {
+        if (!img.complete)
+            return false;
+        if (!imageHasData(img)) {
+            getImageData(img, callback);
+        } else {
+            if (callback) {
+                callback.call(img);
+            }
+        }
+        return true;
+    }
+
+    function getTag(img, tag) {
+        if (!imageHasData(img))
+            return;
+        return img.exifdata[tag];
+    }
+
+    function getAllTags(img) {
+        if (!imageHasData(img))
+            return {};
+        var a,
+                data = img.exifdata,
+                tags = {};
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                tags[a] = data[a];
+            }
+        }
+        return tags;
+    }
+
+    function pretty(img) {
+        if (!imageHasData(img))
+            return "";
+        var a,
+                data = img.exifdata,
+                strPretty = "";
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                if (typeof data[a] == "object") {
+                    if (data[a] instanceof Number) {
+                        strPretty += a + " : " + data[a] + " [" + data[a].numerator + "/" + data[a].denominator + "]\r\n";
+                    } else {
+                        strPretty += a + " : [" + data[a].length + " values]\r\n";
+                    }
+                } else {
+                    strPretty += a + " : " + data[a] + "\r\n";
+                }
+            }
+        }
+        return strPretty;
+    }
+
+    function readFromBinaryFile(file) {
+        return findEXIFinJPEG(file);
+    }
+
+
+    return {
+        readFromBinaryFile: readFromBinaryFile,
+        pretty: pretty,
+        getTag: getTag,
+        getAllTags: getAllTags,
+        getData: getData,
+        Tags: ExifTags,
+        TiffTags: TiffTags,
+        GPSTags: GPSTags,
+        StringValues: StringValues
+    };
+
+})();
+/*
+ * 
+ * canvasResize
+ * 
+ * Version: 1.2.0 
+ * Date (d/m/y): 02/10/12
+ * Update (d/m/y): 14/05/13
+ * Original author: @gokercebeci 
+ * Licensed under the MIT license
+ * - This plugin working with binaryajax.js and exif.js 
+ *   (It's under the MPL License http://www.nihilogic.dk/licenses/mpl-license.txt)
+ * Demo: http://canvasResize.gokercebeci.com/
+ * 
+ * - I fixed iOS6 Safari's image file rendering issue for large size image (over mega-pixel)
+ *   using few functions from https://github.com/stomita/ios-imagefile-megapixel
+ *   (detectSubsampling, )
+ *   And fixed orientation issue by using https://github.com/jseidelin/exif-js
+ *   Thanks, Shinichi Tomita and Jacob Seidelin
+ */
+
+(function($) {
+    var pluginName = 'canvasResize',
+            methods = {
+        newsize: function(w, h, W, H, C) {
+            var c = C ? 'h' : '';
+            if ((W && w > W) || (H && h > H)) {
+                var r = w / h;
+                if ((r >= 1 || H === 0) && W && !C) {
+                    w = W;
+                    h = (W / r) >> 0;
+                } else if (C && r <= (W / H)) {
+                    w = W;
+                    h = (W / r) >> 0;
+                    c = 'w';
+                } else {
+                    w = (H * r) >> 0;
+                    h = H;
+                }
+            }
+            return {
+                'width': w,
+                'height': h,
+                'cropped': c
+            };
+        },
+        dataURLtoBlob: function(data) {
+            var mimeString = data.split(',')[0].split(':')[1].split(';')[0];
+            var byteString = atob(data.split(',')[1]);
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            var bb = (window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder);
+            if (bb) {
+                //    console.log('BlobBuilder');        
+                bb = new (window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder)();
+                bb.append(ab);
+                return bb.getBlob(mimeString);
+            } else {
+                //    console.log('Blob');  
+                bb = new Blob([ab], {
+                    'type': (mimeString)
+                });
+                return bb;
+            }
+        },
+        /**
+         * Detect subsampling in loaded image.
+         * In iOS, larger images than 2M pixels may be subsampled in rendering.
+         */
+        detectSubsampling: function(img) {
+            var iw = img.width, ih = img.height;
+            if (iw * ih > 1048576) { // subsampling may happen over megapixel image
+                var canvas = document.createElement('canvas');
+                canvas.width = canvas.height = 1;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, -iw + 1, 0);
+                // subsampled image becomes half smaller in rendering size.
+                // check alpha channel value to confirm image is covering edge pixel or not.
+                // if alpha value is 0 image is not covering, hence subsampled.
+                return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
+            } else {
+                return false;
+            }
+        },
+        /**
+         * Update the orientation according to the specified rotation angle
+         */
+        rotate: function(orientation, angle) {
+            var o = {
+                // nothing
+                1: {90: 6, 180: 3, 270: 8},
+                // horizontal flip
+                2: {90: 7, 180: 4, 270: 5},
+                // 180 rotate left
+                3: {90: 8, 180: 1, 270: 6},
+                // vertical flip
+                4: {90: 5, 180: 2, 270: 7},
+                // vertical flip + 90 rotate right
+                5: {90: 2, 180: 7, 270: 4},
+                // 90 rotate right
+                6: {90: 3, 180: 8, 270: 1},
+                // horizontal flip + 90 rotate right
+                7: {90: 4, 180: 5, 270: 2},
+                // 90 rotate left
+                8: {90: 1, 180: 6, 270: 3}
+            };
+            return o[orientation][angle] ? o[orientation][angle] : orientation;
+        },
+        /**
+         * Transform canvas coordination according to specified frame size and orientation
+         * Orientation value is from EXIF tag
+         */
+        transformCoordinate: function(canvas, width, height, orientation) {
+            switch (orientation) {
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    canvas.width = height;
+                    canvas.height = width;
+                    break;
+                default:
+                    canvas.width = width;
+                    canvas.height = height;
+            }
+            var ctx = canvas.getContext('2d');
+            switch (orientation) {
+                case 1:
+                    // nothing
+                    break;
+                case 2:
+                    // horizontal flip
+                    ctx.translate(width, 0);
+                    ctx.scale(-1, 1);
+                    break;
+                case 3:
+                    // 180 rotate left
+                    ctx.translate(width, height);
+                    ctx.rotate(Math.PI);
+                    break;
+                case 4:
+                    // vertical flip
+                    ctx.translate(0, height);
+                    ctx.scale(1, -1);
+                    break;
+                case 5:
+                    // vertical flip + 90 rotate right
+                    ctx.rotate(0.5 * Math.PI);
+                    ctx.scale(1, -1);
+                    break;
+                case 6:
+                    // 90 rotate right
+                    ctx.rotate(0.5 * Math.PI);
+                    ctx.translate(0, -height);
+                    break;
+                case 7:
+                    // horizontal flip + 90 rotate right
+                    ctx.rotate(0.5 * Math.PI);
+                    ctx.translate(width, -height);
+                    ctx.scale(-1, 1);
+                    break;
+                case 8:
+                    // 90 rotate left
+                    ctx.rotate(-0.5 * Math.PI);
+                    ctx.translate(-width, 0);
+                    break;
+                default:
+                    break;
+            }
+        },
+        /**
+         * Detecting vertical squash in loaded image.
+         * Fixes a bug which squash image vertically while drawing into canvas for some images.
+         */
+        detectVerticalSquash: function(img, iw, ih) {
+            var canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = ih;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            var data = ctx.getImageData(0, 0, 1, ih).data;
+            // search image edge pixel position in case it is squashed vertically.
+            var sy = 0;
+            var ey = ih;
+            var py = ih;
+            while (py > sy) {
+                var alpha = data[(py - 1) * 4 + 3];
+                if (alpha === 0) {
+                    ey = py;
+                } else {
+                    sy = py;
+                }
+                py = (ey + sy) >> 1;
+            }
+            var ratio = py / ih;
+            return ratio === 0 ? 1 : ratio;
+        },
+        callback: function(d) {
+            return d;
+        },
+        extend: function() {
+            var target = arguments[0] || {}, a = 1, al = arguments.length, deep = false;
+            if (target.constructor === Boolean) {
+                deep = target;
+                target = arguments[1] || {};
+            }
+            if (al === 1) {
+                target = this;
+                a = 0;
+            }
+            var prop;
+            for (; a < al; a++)
+                if ((prop = arguments[a]) !== null)
+                    for (var i in prop) {
+                        if (target === prop[i])
+                            continue;
+                        if (deep && typeof prop[i] === 'object' && target[i])
+                            methods.extend(target[i], prop[i]);
+                        else if (prop[i] !== undefined)
+                            target[i] = prop[i];
+                    }
+            return target;
+        }
+    },
+    defaults = {
+        width: 300,
+        height: 0,
+        crop: false,
+        quality: 80,
+        rotate: 0,
+        'callback': methods.callback
+    };
+    function Plugin(file, options) {
+        this.file = file;
+        // EXTEND
+        this.options = methods.extend({}, defaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
+        this.init();
+    }
+    Plugin.prototype = {
+        init: function() {
+            //this.options.init(this);
+            var $this = this;
+            var file = this.file;
+
+            var reader = new FileReader();
+            reader.onloadend = function(e) {
+
+                var dataURL = e.target.result;
+                var byteString = atob(dataURL.split(',')[1]);
+                var binary = new BinaryFile(byteString, 0, byteString.length);
+                var exif = EXIF.readFromBinaryFile(binary);
+
+                var img = new Image();
+                img.onload = function(e) {
+
+                    var orientation = exif['Orientation'] || 1;
+                    orientation = methods.rotate(orientation, $this.options.rotate);
+
+                    // CW or CCW ? replace width and height
+                    var size = (orientation >= 5 && orientation <= 8)
+                            ? methods.newsize(img.height, img.width, $this.options.width, $this.options.height, $this.options.crop)
+                            : methods.newsize(img.width, img.height, $this.options.width, $this.options.height, $this.options.crop);
+
+                    var iw = img.width, ih = img.height;
+                    var width = size.width, height = size.height;
+
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    ctx.save();
+                    methods.transformCoordinate(canvas, width, height, orientation);
+
+                    // over image size
+                    if (methods.detectSubsampling(img)) {
+                        iw /= 2;
+                        ih /= 2;
+                    }
+                    var d = 1024; // size of tiling canvas
+                    var tmpCanvas = document.createElement('canvas');
+                    tmpCanvas.width = tmpCanvas.height = d;
+                    var tmpCtx = tmpCanvas.getContext('2d');
+                    var vertSquashRatio = methods.detectVerticalSquash(img, iw, ih);
+                    var sy = 0;
+                    while (sy < ih) {
+                        var sh = sy + d > ih ? ih - sy : d;
+                        var sx = 0;
+                        while (sx < iw) {
+                            var sw = sx + d > iw ? iw - sx : d;
+                            tmpCtx.clearRect(0, 0, d, d);
+                            tmpCtx.drawImage(img, -sx, -sy);
+                            var dx = Math.floor(sx * width / iw);
+                            var dw = Math.ceil(sw * width / iw);
+                            var dy = Math.floor(sy * height / ih / vertSquashRatio);
+                            var dh = Math.ceil(sh * height / ih / vertSquashRatio);
+                            ctx.drawImage(tmpCanvas, 0, 0, sw, sh, dx, dy, dw, dh);
+                            sx += d;
+                        }
+                        sy += d;
+                    }
+                    ctx.restore();
+                    tmpCanvas = tmpCtx = null;
+
+                    // if rotated width and height data replacing issue 
+                    var newcanvas = document.createElement('canvas');
+                    newcanvas.width = size.cropped === 'h' ? height : width;
+                    newcanvas.height = size.cropped === 'w' ? width : height;
+                    var x = size.cropped === 'h' ? (height - width) * .5 : 0;
+                    var y = size.cropped === 'w' ? (width - height) * .5 : 0;
+                    newctx = newcanvas.getContext('2d');
+                    newctx.drawImage(canvas, x, y, width, height);
+
+                    console.log(file, file.type);
+                    if (file.type === "image/png") {
+                        var data = newcanvas.toDataURL(file.type);
+                    } else {
+                        var data = newcanvas.toDataURL("image/jpeg", ($this.options.quality * .01));
+                    }
+
+                    // CALLBACK
+                    $this.options.callback(data, newcanvas.width, newcanvas.height);
+
+                    // });
+                };
+                img.src = dataURL;
+                // =====================================================
+
+            };
+            reader.readAsDataURL(file);
+            //reader.readAsBinaryString(file);
+
+        }
+    };
+    $[pluginName] = function(file, options) {
+        if (typeof file === 'string')
+            return methods[file](options);
+        else
+            new Plugin(file, options);
+    };
+
+})(window);
 "use strict";
 
 /**
@@ -9577,60 +11108,19 @@ $.extend(FileUploadViewer.prototype, {
 	 * @return {Object} Instance of FileUploadViewer Class
 	*/
 	preview: function(img){
-		var settings = this.getPreviewSettings(img.width, img.height)
-		  , left = settings.targetLeft
-		  , top = settings.targetTop
-		  , width = settings.width
-		  , height = settings.height
-		  , size = width
+		var size = this.options.size
 		  , ctx = this.ctx;
 
 		/* Rotate */
-		ctx.drawImage(img, left, top, width, height);
+		ctx.drawImage(img, 0, 0, size, size);
+
 		/* Set data */
 		this.data = this.canvas.toDataURL();
+
 		/* Event */
 		$(this).trigger('previewFileUpload', [this]);
 
 		return this;
-	},
-
-	/**
-	 * Return the preview setting for image position in canvas element
-	 * @param {Integer} srcWidth width image source
-	 * @param {Integer} srcHeight height image source
-	 * @return {Object} list of settings for preview action
-	*/
-	getPreviewSettings: function(srcWidth, srcHeight){
-		var targetWidth = this.options.size
-		  , targetHeight = this.options.size
-		  , width = targetWidth
-		  , height = targetHeight;
-
-	    /* Scale to the target width */
-	    var scaleX1 = targetWidth
-	      , scaleY1 = (srcHeight * targetWidth)/srcWidth;
-
-	    /* Scale to the target height */
-	    var scaleX2 = (srcWidth * targetHeight)/srcHeight
-	      , scaleY2 = targetHeight;
-
-		/* Now figure out which one we should use */
-		if(scaleX2 > targetWidth){
-			/* Landscape image */
-			width = Math.floor(scaleX2);
-	    } else {
-	    	height = Math.floor(scaleY1);
-	    }
-
-	    var result = {
-			width: width,
-			height: height,
-			targetLeft: Math.floor((targetWidth - width)/2),
-			targetTop: Math.floor((targetHeight - height)/2)
-		};
-
-		return result;
 	},
 
 	/**
@@ -9656,7 +11146,6 @@ var FileUploadManager = function(container, opts){
 	/* Child Properties */
 	this.form = $('form', this.container);
 	this.file = $('input[type="file"]');
-	this.reader = new FileReader();
 	this.rotation = 0;
 	this.data = null;
 	return this;
@@ -9668,9 +11157,7 @@ FileUploadManager.prototype = Object.create(FileUploadViewer.prototype);
 /* Overwrite methods */
 $.extend(FileUploadManager.prototype, {
 	init: function(){
-		var canvas = this.canvas
-		  , ctx = this.ctx
-		  , self = this;
+		var self = this;
 
 		this.file.bind('change', function(evt){
 			/* Input type file */
@@ -9679,24 +11166,24 @@ $.extend(FileUploadManager.prototype, {
 			/* Event for interface */
 			$(self).trigger('previewStartLoad');
 
-			/* Listener for file reader */
-			self.reader.onload = function(e){
-				var src = e.target.result
-				  , img = new Image();
+			canvasResize(target.files[0], {
+		        width: 280,
+		        height: 280,
+		        crop: true,
+		        quality: 100,
+		        callback: function(data, width, height) {
+		            var img = new Image();
 
-				/* Image loading preview */
-				img.onload = function(){
-					self.preview(img);
-					/* Event for interface */
-					$(self).trigger('previewLoaded');
-				};
+		            img.onload = function(){
+						self.preview(img);
+						/* Event for interface */
+						$(self).trigger('previewLoaded');
+					};
 
-				/* Load image data */
-				img.src = src;
-			};
-
-			/* Read information in target input type file */
-			self.reader.readAsDataURL(target.files[0]);
+					/* Load image data */
+					img.src = data;
+		        }
+		    });
 		});
 
 		return this;

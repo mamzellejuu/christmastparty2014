@@ -58,60 +58,19 @@ $.extend(FileUploadViewer.prototype, {
 	 * @return {Object} Instance of FileUploadViewer Class
 	*/
 	preview: function(img){
-		var settings = this.getPreviewSettings(img.width, img.height)
-		  , left = settings.targetLeft
-		  , top = settings.targetTop
-		  , width = settings.width
-		  , height = settings.height
-		  , size = width
+		var size = this.options.size
 		  , ctx = this.ctx;
 
 		/* Rotate */
-		ctx.drawImage(img, left, top, width, height);
+		ctx.drawImage(img, 0, 0, size, size);
+
 		/* Set data */
 		this.data = this.canvas.toDataURL();
+
 		/* Event */
 		$(this).trigger('previewFileUpload', [this]);
 
 		return this;
-	},
-
-	/**
-	 * Return the preview setting for image position in canvas element
-	 * @param {Integer} srcWidth width image source
-	 * @param {Integer} srcHeight height image source
-	 * @return {Object} list of settings for preview action
-	*/
-	getPreviewSettings: function(srcWidth, srcHeight){
-		var targetWidth = this.options.size
-		  , targetHeight = this.options.size
-		  , width = targetWidth
-		  , height = targetHeight;
-
-	    /* Scale to the target width */
-	    var scaleX1 = targetWidth
-	      , scaleY1 = (srcHeight * targetWidth)/srcWidth;
-
-	    /* Scale to the target height */
-	    var scaleX2 = (srcWidth * targetHeight)/srcHeight
-	      , scaleY2 = targetHeight;
-
-		/* Now figure out which one we should use */
-		if(scaleX2 > targetWidth){
-			/* Landscape image */
-			width = Math.floor(scaleX2);
-	    } else {
-	    	height = Math.floor(scaleY1);
-	    }
-
-	    var result = {
-			width: width,
-			height: height,
-			targetLeft: Math.floor((targetWidth - width)/2),
-			targetTop: Math.floor((targetHeight - height)/2)
-		};
-
-		return result;
 	},
 
 	/**
@@ -137,7 +96,6 @@ var FileUploadManager = function(container, opts){
 	/* Child Properties */
 	this.form = $('form', this.container);
 	this.file = $('input[type="file"]');
-	this.reader = new FileReader();
 	this.rotation = 0;
 	this.data = null;
 	return this;
@@ -149,9 +107,7 @@ FileUploadManager.prototype = Object.create(FileUploadViewer.prototype);
 /* Overwrite methods */
 $.extend(FileUploadManager.prototype, {
 	init: function(){
-		var canvas = this.canvas
-		  , ctx = this.ctx
-		  , self = this;
+		var self = this;
 
 		this.file.bind('change', function(evt){
 			/* Input type file */
@@ -160,24 +116,24 @@ $.extend(FileUploadManager.prototype, {
 			/* Event for interface */
 			$(self).trigger('previewStartLoad');
 
-			/* Listener for file reader */
-			self.reader.onload = function(e){
-				var src = e.target.result
-				  , img = new Image();
+			canvasResize(target.files[0], {
+		        width: 280,
+		        height: 280,
+		        crop: true,
+		        quality: 100,
+		        callback: function(data, width, height) {
+		            var img = new Image();
 
-				/* Image loading preview */
-				img.onload = function(){
-					self.preview(img);
-					/* Event for interface */
-					$(self).trigger('previewLoaded');
-				};
+		            img.onload = function(){
+						self.preview(img);
+						/* Event for interface */
+						$(self).trigger('previewLoaded');
+					};
 
-				/* Load image data */
-				img.src = src;
-			};
-
-			/* Read information in target input type file */
-			self.reader.readAsDataURL(target.files[0]);
+					/* Load image data */
+					img.src = data;
+		        }
+		    });
 		});
 
 		return this;
