@@ -11111,7 +11111,7 @@ $.extend(FileUploadViewer.prototype, {
 		var size = this.options.size
 		  , ctx = this.ctx;
 
-		/* Rotate */
+		/* Preview */
 		ctx.drawImage(img, 0, 0, size, size);
 
 		/* Set data */
@@ -11146,7 +11146,6 @@ var FileUploadManager = function(container, opts){
 	/* Child Properties */
 	this.form = $('form', this.container);
 	this.file = $('input[type="file"]');
-	this.rotation = 0;
 	this.data = null;
 	return this;
 };
@@ -11195,9 +11194,9 @@ $.extend(FileUploadManager.prototype, {
 		  , ctx = this.ctx
 		  , size = this.options.size
 		  , center = size/2
-		  , self = this;
+		  , self = this
+		  , rotation = 90*Math.PI/180;
 
-		this.rotation = (this.rotation != 270)? this.rotation+90 : 0;
 
 		if(src.length){
 			var self = this;
@@ -11205,7 +11204,7 @@ $.extend(FileUploadManager.prototype, {
 				ctx.save();
 				ctx.clearRect (0, 0, size, size);
 				ctx.translate(center, center);
-				ctx.rotate(self.rotation*Math.PI/180);
+				ctx.rotate(rotation);
 				ctx.drawImage(img, -1*center, -1*center, size, size);
 
 				/* Set data */
